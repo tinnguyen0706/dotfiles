@@ -1,8 +1,6 @@
 require("full-border"):setup({ type = ui.Border.ROUNDED })
 require("what-size"):setup({ priority = 600 })
 
-local dir_counts = {}
-
 local function fmt_size(bytes)
   if not bytes then return "-" end
   if bytes < 2 then return "1 byte" end
@@ -28,25 +26,10 @@ local function fmt_time(sec)
   end
 end
 
-local function count_dir(url_str)
-  local h = io.popen("ls -1AU " .. url_str .. " 2> /dev/null | wc -l")
-  if not h then return 0 end
-  local r = h:read("*a")
-  h:close()
-  return tonumber(r) or 0
-end
-
 function Linemode:size_and_mtime()
-  local time = fmt_time(self._file.cha.mtime)
-
-  if self._file.cha.is_dir then
-    local url = tostring(self._file.url)
-    if dir_counts[url] == nil then
-      dir_counts[url] = count_dir(url)
-    end
-    local n = dir_counts[url]
-    return string.format("%10s  %12s", n .. " item" .. (n ~= 1 and "s" or ""), time)
+  local size = ""
+  if not self._file.cha.is_dir then
+    size = fmt_size(self._file:size())
   end
-
-  return string.format("%10s  %12s", fmt_size(self._file:size()), time)
+  return string.format("%10s  %12s", size, fmt_time(self._file.cha.mtime))
 end

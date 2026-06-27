@@ -81,7 +81,6 @@ window-rule {
  
 
 input {
-    warp-mouse-to-focus
     // disable-power-key-handling
     workspace-auto-back-and-forth
     mod-key "Super"
