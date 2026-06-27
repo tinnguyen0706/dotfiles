@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/palette.json",
+
+  "background": "#eff1f5",
+  "foreground": "#1e1e2e",
+  "cursor":   "#38384a",
+
+  "black":   "#38384a",
+  "red":     "#b80f2e",
+  "green":   "#2e801e",
+  "yellow":  "#c47a14",
+  "blue":    "#1a54c4",
+  "magenta": "#cf5ead",
+  "cyan":    "#107a80",
+  "white":   "#8e92a0",
+
+  "bright_black":   "#3a3a4a",
+  "bright_red":     "#c93045",
+  "bright_green":   "#2e801e",
+  "bright_yellow":  "#c47a14",
+  "bright_blue":    "#157a8a",
+  "bright_magenta": "#cf5ead",
+  "bright_cyan":    "#107a80",
+  "bright_white":   "#a0a4b0",
+
+  "_comment": "Chỉ sửa file này. Chạy 'python3 ~/.config/update-theme.py' để cập nhật tất cả app."
+}
