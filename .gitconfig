@@ -1,0 +1,14 @@
+[user]
+	name = tinhiem
+	email = nguyentrongtin2807@gmail.com
+	signingkey = F73C52951DFD7B6C
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true

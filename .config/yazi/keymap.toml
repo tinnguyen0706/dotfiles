@@ -1,0 +1,5 @@
+[mgr]
+prepend_keymap = [
+	{ on = "S", run = "plugin sidebar", desc = "Open sidebar with Trash & Mounts" },
+	{ on = [".", "s"], run = "plugin what-size -- '--clipboard'", desc = "Calc size of selection or cwd" },
+]
