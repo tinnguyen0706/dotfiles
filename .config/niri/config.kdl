@@ -237,38 +237,47 @@ window-rule {
 window-rule {
     match app-id="firefox"
     opacity 0.88
-    background-effect { blur true }
 }
 
 // Spotify: kính mờ cho app nhạc nền
 window-rule {
     match app-id="spotify"
     opacity 0.75
-    background-effect { blur true }
+    background-effect {
+        blur true
+    }
 }
 
 // VS Code
 window-rule {
     match app-id="Code" is-focused=true
     opacity 0.75
-    background-effect { blur true }
+    background-effect {
+        blur true
+    }
 }
 window-rule {
     match app-id="Code" is-focused=false
     opacity 0.6
-    background-effect { blur true }
+    background-effect {
+        blur true
+    }
 }
 
 // Vesktop (Discord)
 window-rule {
     match app-id="dev.vencord.Vesktop" is-focused=true
     opacity 0.7
-    background-effect { blur true }
+    background-effect {
+        blur true
+    }
 }
 window-rule {
     match app-id="dev.vencord.Vesktop" is-focused=false
     opacity 0.5
-    background-effect { blur true }
+    background-effect {
+        blur true
+    }
 }
 
 // -----------------------------------------------------------------------------
