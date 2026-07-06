@@ -422,10 +422,25 @@ def update_vesktop():
     print("  ✓ vesktop quickCss.css")
 
 
+# ── neovim ───────────────────────────────────────────────
+def update_neovim():
+    """matugen.lua reads palette.json dynamically, just signal nvim to reload."""
+    ret = os.system("pkill -SIGUSR1 nvim >/dev/null 2>&1")
+    if ret == 0:
+        print("  ✓ neovim (SIGUSR1 sent)")
+    else:
+        print("  ~ neovim: no running instance")
+    # Also update the apply.sh hook for completeness
+    apply = os.path.expanduser(
+        "~/.local/state/noctalia/community-templates/neovim/apply.sh"
+    )
+    if os.path.isfile(apply):
+        os.system(f"bash '{apply}' >/dev/null 2>&1")
+
 # ── Run ─────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Cập nhật theme từ palette.json...")
-    for fn in [update_kitty, update_starship, update_btop, update_yazi, update_opencode, update_vesktop]:
+    for fn in [update_kitty, update_starship, update_btop, update_yazi, update_opencode, update_vesktop, update_neovim]:
         try:
             fn()
         except Exception as e:

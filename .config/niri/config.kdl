@@ -191,9 +191,11 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // Startup
 // -----------------------------------------------------------------------------
 spawn-at-startup "noctalia"
-spawn-at-startup "corectrl" "--minimize-systray"
+spawn-at-startup "corectrl"
 spawn-at-startup "fcitx5" "-d"
-
+spawn-at-startup "bitwarden-desktop"
+spawn-at-startup "flatpak" "run" "--command=startvesktop" "dev.vencord.Vesktop"
+ 
 // -----------------------------------------------------------------------------
 // Window Rules
 // -----------------------------------------------------------------------------
@@ -315,12 +317,12 @@ binds {
     Mod+Space  { spawn-sh "noctalia msg panel-toggle launcher"; }
     Mod+S      { spawn-sh "noctalia msg panel-toggle control-center"; }
     Mod+E      { spawn-sh "kitty -e yazi"; }
+    Mod+Shift+E hotkey-overlay-title="File Manager: nautilus" { spawn "nautilus"; }
     Mod+V      { spawn-sh "noctalia msg panel-toggle clipboard"; }
     Ctrl+Shift+Escape { spawn-sh "kitty -e btop"; }
 
     // -- Session --------------------------------------------------------------
     Super+L hotkey-overlay-title="Lock the Screen: noctalia" { spawn-sh "noctalia msg session lock"; }
-    Mod+Shift+E     { quit; }
     Ctrl+Alt+Delete { quit; }
     Mod+Shift+P     { power-off-monitors; }
 
