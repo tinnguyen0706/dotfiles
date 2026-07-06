@@ -1,51 +1,67 @@
- local M = {}
+local M = {}
 
 function M.setup()
+  local palette = vim.fn.json_decode(vim.fn.readfile(vim.fn.expand("~/.config/palette.json")))
+
   require('base16-colorscheme').setup({
-    base00 = '#e6e8fa',
-    base01 = '#eff0ff',
-    base02 = '#dbddff',
-    base03 = '#7177fc',
-    base04 = '#4b55c8',
-    base05 = '#0e0e43',
-    base06 = '#0e0e43',
-    base07 = '#0e0e43',
-    base08 = '#fd4663',
-    base09 = '#0e0e43',
-    base0A = '#8e93d8',
-    base0B = '#5d65f5',
-    base0C = '#1a1a7f',
-    base0D = '#091090',
-    base0E = '#1b217e',
-    base0F = '#f7bbc4',
+    base00 = palette.background,
+    base01 = '#e6e9ef',
+    base02 = '#ccd0da',
+    base03 = palette.white,
+    base04 = '#4c4f69',
+    base05 = palette.foreground,
+    base06 = palette.foreground,
+    base07 = palette.foreground,
+    base08 = palette.red,
+    base09 = '#fe640b',
+    base0A = palette.yellow,
+    base0B = palette.green,
+    base0C = palette.cyan,
+    base0D = palette.blue,
+    base0E = palette.magenta,
+    base0F = '#e64553',
   })
+
+  local bg = palette.background
+  local fg = palette.foreground
+  local panel_bg = '#e6e9ef'
+  local element_bg = '#ccd0da'
+  local blue = palette.blue
+  local cyan = palette.cyan
+  local green = palette.green
+  local magenta = palette.magenta
+  local white = palette.white
 
   local hi = function(group, opts)
     vim.api.nvim_set_hl(0, group, opts)
   end
 
-  hi('TelescopeNormal',         { fg = '#0e0e43',          bg = '#e6e8fa' })
-  hi('TelescopeBorder',         { fg = '#7177fc',             bg = '#e6e8fa' })
-  hi('TelescopePromptNormal',   { fg = '#0e0e43',          bg = '#e6e8fa' })
-  hi('TelescopePromptBorder',   { fg = '#7177fc',             bg = '#e6e8fa' })
-  hi('TelescopePromptPrefix',   { fg = '#5d65f5',             bg = '#e6e8fa' })
-  hi('TelescopePromptCounter',  { fg = '#4b55c8',  bg = '#e6e8fa' })
-  hi('TelescopePromptTitle',    { fg = '#e6e8fa',             bg = '#5d65f5' })
-  hi('TelescopePreviewTitle',   { fg = '#e6e8fa',             bg = '#8e93d8' })
-  hi('TelescopeResultsTitle',   { fg = '#e6e8fa',             bg = '#0e0e43' })
-  hi('TelescopeSelection',      { fg = '#0e0e43',          bg = '#dbddff' })
-  hi('TelescopeSelectionCaret', { fg = '#5d65f5',             bg = '#dbddff' })
-  hi('TelescopeMatching',       { fg = '#5d65f5',             bold = true })
+  hi('TelescopeNormal',         { fg = fg,            bg = bg })
+  hi('TelescopeBorder',         { fg = blue,           bg = bg })
+  hi('TelescopePromptNormal',   { fg = fg,            bg = bg })
+  hi('TelescopePromptBorder',   { fg = blue,           bg = bg })
+  hi('TelescopePromptPrefix',   { fg = green,          bg = bg })
+  hi('TelescopePromptCounter',  { fg = white, bg = bg })
+  hi('TelescopePromptTitle',    { fg = bg,             bg = green })
+  hi('TelescopePreviewTitle',   { fg = bg,             bg = cyan })
+  hi('TelescopeResultsTitle',   { fg = bg,             bg = fg })
+  hi('TelescopeSelection',      { fg = fg,            bg = panel_bg })
+  hi('TelescopeSelectionCaret', { fg = green,          bg = panel_bg })
+  hi('TelescopeMatching',       { fg = green,          bold = true })
+
+  hi('NormalFloat',             { fg = fg,            bg = bg })
+  hi('FloatBorder',             { fg = blue,           bg = bg })
+  hi('WhichKeyFloat',           { fg = fg,            bg = bg })
+  hi('WhichKeyBorder',          { fg = blue,           bg = bg })
 end
 
- -- Register a signal handler for SIGUSR1 (matugen updates)
- local signal = vim.uv.new_signal()
- signal:start(
-   'sigusr1',
-   vim.schedule_wrap(function()
-     package.loaded['matugen'] = nil
-     require('matugen').setup()
-   end)
- )
+local signal = vim.uv.new_signal()
+signal:start(
+  'sigusr1',
+  vim.schedule_wrap(function()
+    package.loaded['matugen'] = nil
+    require('matugen').setup()
+  end)
+)
 
- return M
+return M
