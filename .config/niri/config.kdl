@@ -245,39 +245,52 @@ window-rule {
     opacity 0.75
     background-effect {
         blur true
+        xray true
     }
 }
 
 // VS Code
 window-rule {
-    match app-id="Code" is-focused=true
+    match app-id="code" is-focused=true
     opacity 0.75
     background-effect {
         blur true
+        xray true
     }
 }
 window-rule {
-    match app-id="Code" is-focused=false
+    match app-id="code" is-focused=false
     opacity 0.6
     background-effect {
         blur true
+        xray true
     }
 }
 
 // Vesktop (Discord)
 window-rule {
-    match app-id="dev.vencord.Vesktop" is-focused=true
+    match app-id="vesktop" is-focused=true
     opacity 0.7
     background-effect {
         blur true
+        xray true
     }
 }
 window-rule {
-    match app-id="dev.vencord.Vesktop" is-focused=false
+    match app-id="vesktop" is-focused=false
     opacity 0.5
     background-effect {
         blur true
+        xray true
     }
+}
+
+// Calculator: floating
+window-rule {
+    match app-id="org.gnome.Calculator"
+    open-floating true
+    default-column-width { fixed 360; }
+    default-window-height { fixed 540; }
 }
 
 // -----------------------------------------------------------------------------
