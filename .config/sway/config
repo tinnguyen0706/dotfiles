@@ -14,17 +14,18 @@ set $clipboard noctalia msg panel-toggle clipboard
 # =============================================================================
 # Environment Variables (from niri config)
 # =============================================================================
-env MOZ_DISABLE_RDD_SANDBOX=1
-env LIBVA_DRIVER_NAME=nvidia
-env __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
-env CUDA_DISABLE_PERF_BOOST=1
+# Note: env vars should be set in shell before starting sway (~/.zprofile or ~/.profile)
+# export MOZ_DISABLE_RDD_SANDBOX=1
+# export LIBVA_DRIVER_NAME=nvidia
+# export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+# export CUDA_DISABLE_PERF_BOOST=1
+# export SWAY_UNSUPPORTED_GPU=true
 
 # =============================================================================
 # Input Configuration (from niri config)
 # =============================================================================
 input * {
     xkb_layout us
-    xkb_variant us
     xkb_numlock enabled
     repeat_delay 600
     repeat_rate 25
@@ -37,14 +38,12 @@ input type:touchpad {
     drag enabled
     click_method button_areas
     scroll_method two_finger
-    accel_speed 0.2
     accel_profile adaptive
     tap_button_map lrm
     scroll_factor 1.0
 }
 
 input type:mouse {
-    accel_speed 0.2
     accel_profile adaptive
     scroll_factor 1.0
 }
@@ -53,7 +52,7 @@ input type:mouse {
 # Output Configuration (from niri monitor.kdl)
 # =============================================================================
 output eDP-1 {
-    mode 1920x1080@144.003
+    # mode 1920x1080@144.003  # auto-detect (validation fails without connected display)
     scale 1.0
     transform normal
     position 0 0
@@ -78,29 +77,12 @@ for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable
 # Bitwarden extension: floating
 for_window [app_id="firefox" title="^(Bitwarden|Extension:.*Bitwarden)"] floating enable
 
-# Firefox: slight transparency (requires compositor)
-for_window [app_id="firefox"] opacity 0.88
-
-# Spotify: frosted glass
-for_window [app_id="spotify"] opacity 0.75
-
-# VS Code
-for_window [app_id="code" focused] opacity 0.75
-for_window [app_id="code" focused=false] opacity 0.6
-
-# Vesktop (Discord)
-for_window [app_id="vesktop" focused] opacity 0.7
-for_window [app_id="vesktop" focused=false] opacity 0.5
-
 # Calculator: floating
 for_window [app_id="org.gnome.Calculator"] floating enable, resize set 360 540
-
-# =============================================================================
-# Autostart (from niri spawn-at-startup)
 # =============================================================================
 exec noctalia
 exec fcitx5 -d
-exec sleep 5 && exec flatpak run dev.vencord.Vesktop --no-sandbox --enable-speech-dispatcher --ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --start-minimized
+exec sleep 5 && flatpak run dev.vencord.Vesktop --no-sandbox --enable-speech-dispatcher --ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --start-minimized
 
 # =============================================================================
 # Key Bindings (ported from niri binds)
@@ -155,20 +137,16 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# Focus first/last (workspace level)
-bindsym $mod+Home focus output left
-bindsym $mod+End focus output right
-
 # -- Monitor focus & move ------------------------------------------------------
-bindsym $mod+Shift+Left focus output left
-bindsym $mod+Shift+Down focus output down
-bindsym $mod+Shift+Up focus output up
-bindsym $mod+Shift+Right focus output right
+bindsym $mod+Shift+Left focus output prev
+bindsym $mod+Shift+Down focus output next
+bindsym $mod+Shift+Up focus output next
+bindsym $mod+Shift+Right focus output prev
 
-bindsym $mod+Shift+Ctrl+Left move container to output left
-bindsym $mod+Shift+Ctrl+Down move container to output down
-bindsym $mod+Shift+Ctrl+Up move container to output up
-bindsym $mod+Shift+Ctrl+Right move container to output right
+bindsym $mod+Shift+Ctrl+Left move container to output prev
+bindsym $mod+Shift+Ctrl+Down move container to output next
+bindsym $mod+Shift+Ctrl+Up move container to output next
+bindsym $mod+Shift+Ctrl+Right move container to output prev
 
 # -- Workspace navigation ------------------------------------------------------
 bindsym $mod+Page_Down workspace next
@@ -206,15 +184,10 @@ bindsym $mod+Ctrl+8 move container to workspace number 8
 bindsym $mod+Ctrl+9 move container to workspace number 9
 
 # -- Mouse wheel (workspace & container) ---------------------------------------
-bindsym $mod+WheelDown workspace next
-bindsym $mod+WheelUp workspace prev
-bindsym $mod+Ctrl+WheelDown move container to workspace next
-bindsym $mod+Ctrl+WheelUp move container to workspace prev
-
-bindsym $mod+WheelRight focus right
-bindsym $mod+WheelLeft focus left
-bindsym $mod+Ctrl+WheelRight move right
-bindsym $mod+Ctrl+WheelLeft move left
+bindsym $mod+button5 workspace next
+bindsym $mod+button4 workspace prev
+bindsym $mod+Ctrl+button5 move container to workspace next
+bindsym $mod+Ctrl+button4 move container to workspace prev
 
 # -- Layout --------------------------------------------------------------------
 bindsym $mod+b splith
@@ -243,10 +216,10 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # -- Column/Container width (approximate niri column behavior) ------------------
-bindsym $mod+Minus resize shrink width 10 ppt
-bindsym $mod+Equal resize grow width 10 ppt
-bindsym $mod+Shift+Minus resize shrink height 10 ppt
-bindsym $mod+Shift+Equal resize grow height 10 ppt
+bindsym $mod+Minus resize shrink width 10%
+bindsym $mod+Equal resize grow width 10%
+bindsym $mod+Shift+Minus resize shrink height 10%
+bindsym $mod+Shift+Equal resize grow height 10%
 
 # -- Layout shortcuts ----------------------------------------------------------
 bindsym $mod+Shift+f fullscreen
@@ -273,25 +246,6 @@ bindsym $mod+Shift+F23 exec kitty -e copilot
 
 # -- Hotkey overlay ------------------------------------------------------------
 bindsym $mod+Shift+slash exec swaynag -t warning -m 'Keybindings: $mod+Return=Terminal, $mod+d=Launcher, $mod+e=Yazi, $mod+1-9=Workspaces, $mod+hjkl/Arrows=Focus, $mod+Shift+hjkl=Move, $mod+f=Fullscreen, $mod+t=Float, $mod+r=Resize mode'
-
-# =============================================================================
-# Bar Configuration
-# =============================================================================
-bar {
-    position top
-    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #323232 #323232 #5c5c5c
-        active_workspace #5d65f5 #5d65f5 #ffffff
-        focused_workspace #5d65f5 #5d65f5 #ffffff
-        urgent_workspace #fd4663 #fd4663 #ffffff
-    }
-
-    font pango:JetBrainsMono Nerd Font 10
-}
 
 # =============================================================================
 # Gaps (approximate niri gaps=10)
