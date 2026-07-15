@@ -1,0 +1,31 @@
+##
+## labwc environment - based on niri config environment variables
+##
+
+## Keyboard layout
+XKB_DEFAULT_LAYOUT=us
+XKB_DEFAULT_VARIANT=us
+
+## GTK4 input method (use simple if not using fcitx5/ibus)
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+
+## Cursor theme
+XCURSOR_THEME=Bibata-Modern-Ice
+XCURSOR_SIZE=24
+
+## Java applications (prevent blank windows)
+_JAVA_AWT_WM_NONREPARENTING=1
+
+## Wayland desktop portal
+XDG_CURRENT_DESKTOP=labwc:wlroots
+
+## Nvidia environment variables (from niri config)
+MOZ_DISABLE_RDD_SANDBOX=1
+LIBVA_DRIVER_NAME=nvidia
+__EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+CUDA_DISABLE_PERF_BOOST=1
+
+## Fallback output for headless/remote
+# LABWC_FALLBACK_OUTPUT=NOOP-fallback

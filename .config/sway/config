@@ -1,0 +1,305 @@
+# Sway Configuration - Ported from niri config
+# https://man.swaywm.org/sway/5
+
+# =============================================================================
+# Variables
+# =============================================================================
+set $mod Mod4
+set $term kitty
+set $menu wmenu-run
+set $launcher noctalia msg panel-toggle launcher
+set $control_center noctalia msg panel-toggle control-center
+set $clipboard noctalia msg panel-toggle clipboard
+
+# =============================================================================
+# Environment Variables (from niri config)
+# =============================================================================
+env MOZ_DISABLE_RDD_SANDBOX=1
+env LIBVA_DRIVER_NAME=nvidia
+env __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+env CUDA_DISABLE_PERF_BOOST=1
+
+# =============================================================================
+# Input Configuration (from niri config)
+# =============================================================================
+input * {
+    xkb_layout us
+    xkb_variant us
+    xkb_numlock enabled
+    repeat_delay 600
+    repeat_rate 25
+}
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    drag enabled
+    click_method button_areas
+    scroll_method two_finger
+    accel_speed 0.2
+    accel_profile adaptive
+    tap_button_map lrm
+    scroll_factor 1.0
+}
+
+input type:mouse {
+    accel_speed 0.2
+    accel_profile adaptive
+    scroll_factor 1.0
+}
+
+# =============================================================================
+# Output Configuration (from niri monitor.kdl)
+# =============================================================================
+output eDP-1 {
+    mode 1920x1080@144.003
+    scale 1.0
+    transform normal
+    position 0 0
+}
+
+# =============================================================================
+# Window Rules (from niri window-rules)
+# =============================================================================
+# Frosted glass base: all windows (opacity handled by compositor/picom if needed)
+# Note: sway doesn't have native blur/opacity without swayfx/picom
+
+# Focused window: higher opacity
+for_window [window_type="normal"] focus border pixel 2 #7fc8ff
+for_window [window_type="normal"] unfocused border pixel 2 #505050
+
+# Floating Noctalia settings window
+for_window [app_id="dev.noctalia.Noctalia.Settings"] floating enable, resize set 1080 920
+
+# Firefox picture-in-picture as floating
+for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable
+
+# Bitwarden extension: floating
+for_window [app_id="firefox" title="^(Bitwarden|Extension:.*Bitwarden)"] floating enable
+
+# Firefox: slight transparency (requires compositor)
+for_window [app_id="firefox"] opacity 0.88
+
+# Spotify: frosted glass
+for_window [app_id="spotify"] opacity 0.75
+
+# VS Code
+for_window [app_id="code" focused] opacity 0.75
+for_window [app_id="code" focused=false] opacity 0.6
+
+# Vesktop (Discord)
+for_window [app_id="vesktop" focused] opacity 0.7
+for_window [app_id="vesktop" focused=false] opacity 0.5
+
+# Calculator: floating
+for_window [app_id="org.gnome.Calculator"] floating enable, resize set 360 540
+
+# =============================================================================
+# Autostart (from niri spawn-at-startup)
+# =============================================================================
+exec noctalia
+exec fcitx5 -d
+exec sleep 5 && exec flatpak run dev.vencord.Vesktop --no-sandbox --enable-speech-dispatcher --ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --start-minimized
+
+# =============================================================================
+# Key Bindings (ported from niri binds)
+# =============================================================================
+
+# -- Launch apps ---------------------------------------------------------------
+bindsym $mod+Return exec $term
+bindsym $mod+b exec firefox
+bindsym $mod+space exec $launcher
+bindsym $mod+s exec $control_center
+bindsym $mod+e exec kitty -e yazi
+bindsym $mod+Shift+e exec nautilus
+bindsym $mod+v exec $clipboard
+bindsym Ctrl+Shift+Escape exec kitty -e btop
+
+# -- Session -------------------------------------------------------------------
+bindsym $mod+Shift+l exec noctalia msg session lock
+bindsym Ctrl+Alt+Delete exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
+bindsym $mod+Shift+p exec swaymsg output \* dpms off
+
+# -- Audio & Brightness (via noctalia) -----------------------------------------
+bindsym --locked XF86AudioRaiseVolume exec noctalia msg volume-up
+bindsym --locked XF86AudioLowerVolume exec noctalia msg volume-down
+bindsym --locked XF86AudioMute exec noctalia msg volume-mute
+bindsym --locked XF86AudioMicMute exec noctalia msg mic-mute
+bindsym --locked XF86MonBrightnessUp exec noctalia msg brightness-up
+bindsym --locked XF86MonBrightnessDown exec noctalia msg brightness-down
+
+# -- Overview (not available in sway, using workspace overview alternative) ---
+bindsym $mod+o exec swaymsg -t get_workspaces
+
+# -- Window Management ---------------------------------------------------------
+bindsym $mod+Shift+q kill
+
+# Focus (using vim keys + arrows)
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move windows
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Focus first/last (workspace level)
+bindsym $mod+Home focus output left
+bindsym $mod+End focus output right
+
+# -- Monitor focus & move ------------------------------------------------------
+bindsym $mod+Shift+Left focus output left
+bindsym $mod+Shift+Down focus output down
+bindsym $mod+Shift+Up focus output up
+bindsym $mod+Shift+Right focus output right
+
+bindsym $mod+Shift+Ctrl+Left move container to output left
+bindsym $mod+Shift+Ctrl+Down move container to output down
+bindsym $mod+Shift+Ctrl+Up move container to output up
+bindsym $mod+Shift+Ctrl+Right move container to output right
+
+# -- Workspace navigation ------------------------------------------------------
+bindsym $mod+Page_Down workspace next
+bindsym $mod+Page_Up workspace prev
+bindsym $mod+u workspace next
+bindsym $mod+i workspace prev
+
+bindsym $mod+Ctrl+Page_Down move container to workspace next
+bindsym $mod+Ctrl+Page_Up move container to workspace prev
+bindsym $mod+Ctrl+u move container to workspace next
+bindsym $mod+Ctrl+i move container to workspace prev
+
+bindsym $mod+Shift+Page_Down move workspace to output next
+bindsym $mod+Shift+Page_Up move workspace to output prev
+
+# -- Workspace by index --------------------------------------------------------
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+
+bindsym $mod+Ctrl+1 move container to workspace number 1
+bindsym $mod+Ctrl+2 move container to workspace number 2
+bindsym $mod+Ctrl+3 move container to workspace number 3
+bindsym $mod+Ctrl+4 move container to workspace number 4
+bindsym $mod+Ctrl+5 move container to workspace number 5
+bindsym $mod+Ctrl+6 move container to workspace number 6
+bindsym $mod+Ctrl+7 move container to workspace number 7
+bindsym $mod+Ctrl+8 move container to workspace number 8
+bindsym $mod+Ctrl+9 move container to workspace number 9
+
+# -- Mouse wheel (workspace & container) ---------------------------------------
+bindsym $mod+WheelDown workspace next
+bindsym $mod+WheelUp workspace prev
+bindsym $mod+Ctrl+WheelDown move container to workspace next
+bindsym $mod+Ctrl+WheelUp move container to workspace prev
+
+bindsym $mod+WheelRight focus right
+bindsym $mod+WheelLeft focus left
+bindsym $mod+Ctrl+WheelRight move right
+bindsym $mod+Ctrl+WheelLeft move left
+
+# -- Layout --------------------------------------------------------------------
+bindsym $mod+b splith
+bindsym $mod+v splitv
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+
+# -- Resize mode ---------------------------------------------------------------
+mode "resize" {
+    bindsym h resize shrink width 10px
+    bindsym j resize grow height 10px
+    bindsym k resize shrink height 10px
+    bindsym l resize grow width 10px
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# -- Column/Container width (approximate niri column behavior) ------------------
+bindsym $mod+Minus resize shrink width 10 ppt
+bindsym $mod+Equal resize grow width 10 ppt
+bindsym $mod+Shift+Minus resize shrink height 10 ppt
+bindsym $mod+Shift+Equal resize grow height 10 ppt
+
+# -- Layout shortcuts ----------------------------------------------------------
+bindsym $mod+Shift+f fullscreen
+bindsym $mod+m maximize
+
+# -- Floating & tabs -----------------------------------------------------------
+bindsym $mod+t floating toggle
+bindsym $mod+Shift+v focus mode_toggle
+bindsym $mod+Shift+w layout toggle tabbed
+
+# -- Screenshots ---------------------------------------------------------------
+bindsym Print exec grim ~/Pictures/Screenshots/Screenshot\ from\ $(date +%Y-%m-%d\ %H-%M-%S).png
+bindsym Ctrl+Print exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Pictures/Screenshots/Screenshot\ from\ $(date +%Y-%m-%d\ %H-%M-%S).png
+bindsym Alt+Print exec grim -g "$(slurp)" ~/Pictures/Screenshots/Screenshot\ from\ $(date +%Y-%m-%d\ %H-%M-%S).png
+
+# -- Misc ----------------------------------------------------------------------
+bindsym $mod+Escape mode "default"
+
+# -- Fn keys -------------------------------------------------------------------
+bindsym XF86Calculator exec gnome-calculator
+bindsym XF86Favorites exec spotify-launcher
+bindsym $mod+p exec nwg-displays
+bindsym $mod+Shift+F23 exec kitty -e copilot
+
+# -- Hotkey overlay ------------------------------------------------------------
+bindsym $mod+Shift+slash exec swaynag -t warning -m 'Keybindings: $mod+Return=Terminal, $mod+d=Launcher, $mod+e=Yazi, $mod+1-9=Workspaces, $mod+hjkl/Arrows=Focus, $mod+Shift+hjkl=Move, $mod+f=Fullscreen, $mod+t=Float, $mod+r=Resize mode'
+
+# =============================================================================
+# Bar Configuration
+# =============================================================================
+bar {
+    position top
+    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
+
+    colors {
+        statusline #ffffff
+        background #323232
+        inactive_workspace #323232 #323232 #5c5c5c
+        active_workspace #5d65f5 #5d65f5 #ffffff
+        focused_workspace #5d65f5 #5d65f5 #ffffff
+        urgent_workspace #fd4663 #fd4663 #ffffff
+    }
+
+    font pango:JetBrainsMono Nerd Font 10
+}
+
+# =============================================================================
+# Gaps (approximate niri gaps=10)
+# =============================================================================
+gaps inner 10
+gaps outer 0
+
+# =============================================================================
+# Include additional configs
+# =============================================================================
+include /etc/sway/config.d/*

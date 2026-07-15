@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labwc_config>
+
+  <theme>
+    <name>custom</name>
+    <cornerRadius>20</cornerRadius>
+    <font name="JetBrainsMono Nerd Font" size="10" />
+  </theme>
+
+  <keyboard>
+    <default />
+    
+    <!-- Terminal -->
+    <keybind key="W-Return">
+      <action name="Execute">
+        <command>kitty</command>
+      </action>
+    </keybind>
+    
+    <!-- Browser -->
+    <keybind key="W-b">
+      <action name="Execute">
+        <command>firefox</command>
+      </action>
+    </keybind>
+    
+    <!-- Launcher (noctalia) -->
+    <keybind key="W-space">
+      <action name="Execute">
+        <command>noctalia msg panel-toggle launcher</command>
+      </action>
+    </keybind>
+    
+    <!-- Control center (noctalia) -->
+    <keybind key="W-s">
+      <action name="Execute">
+        <command>noctalia msg panel-toggle control-center</command>
+      </action>
+    </keybind>
+    
+    <!-- File manager (yazi) -->
+    <keybind key="W-e">
+      <action name="Execute">
+        <command>kitty -e yazi</command>
+      </action>
+    </keybind>
+    
+    <!-- File manager (nautilus) -->
+    <keybind key="W-S-e">
+      <action name="Execute">
+        <command>nautilus</command>
+      </action>
+    </keybind>
+    
+    <!-- Clipboard (noctalia) -->
+    <keybind key="W-v">
+      <action name="Execute">
+        <command>noctalia msg panel-toggle clipboard</command>
+      </action>
+    </keybind>
+    
+    <!-- System monitor -->
+    <keybind key="C-S-Escape">
+      <action name="Execute">
+        <command>kitty -e btop</command>
+      </action>
+    </keybind>
+    
+    <!-- Lock screen -->
+    <keybind key="W-l">
+      <action name="Execute">
+        <command>noctalia msg session lock</command>
+      </action>
+    </keybind>
+    
+    <!-- Quit labwc -->
+    <keybind key="C-A-Delete">
+      <action name="Exit" />
+    </keybind>
+    
+    <!-- Power off monitors -->
+    <keybind key="W-S-p">
+      <action name="Execute">
+        <command>wlopm --off \*</command>
+      </action>
+    </keybind>
+    
+    <!-- Volume -->
+    <keybind key="XF86AudioRaiseVolume">
+      <action name="Execute">
+        <command>noctalia msg volume-up</command>
+      </action>
+    </keybind>
+    <keybind key="XF86AudioLowerVolume">
+      <action name="Execute">
+        <command>noctalia msg volume-down</command>
+      </action>
+    </keybind>
+    <keybind key="XF86AudioMute">
+      <action name="Execute">
+        <command>noctalia msg volume-mute</command>
+      </action>
+    </keybind>
+    <keybind key="XF86AudioMicMute">
+      <action name="Execute">
+        <command>noctalia msg mic-mute</command>
+      </action>
+    </keybind>
+    
+    <!-- Brightness -->
+    <keybind key="XF86MonBrightnessUp">
+      <action name="Execute">
+        <command>noctalia msg brightness-up</command>
+      </action>
+    </keybind>
+    <keybind key="XF86MonBrightnessDown">
+      <action name="Execute">
+        <command>noctalia msg brightness-down</command>
+      </action>
+    </keybind>
+    
+    <!-- Overview (toggle) -->
+    <keybind key="W-o">
+      <action name="Execute">
+        <command>noctalia msg overview-toggle</command>
+      </action>
+    </keybind>
+    
+    <!-- Close window -->
+    <keybind key="W-q">
+      <action name="Close" />
+    </keybind>
+    
+    <!-- Focus -->
+    <keybind key="W-Left">
+      <action name="FocusDirection">
+        <direction>left</direction>
+      </action>
+    </keybind>
+    <keybind key="W-Down">
+      <action name="FocusDirection">
+        <direction>down</direction>
+      </action>
+    </keybind>
+    <keybind key="W-Up">
+      <action name="FocusDirection">
+        <direction>up</direction>
+      </action>
+    </keybind>
+    <keybind key="W-Right">
+      <action name="FocusDirection">
+        <direction>right</direction>
+      </action>
+    </keybind>
+    
+    <!-- Move windows -->
+    <keybind key="W-C-Left">
+      <action name="MoveDirection">
+        <direction>left</direction>
+      </action>
+    </keybind>
+    <keybind key="W-C-Down">
+      <action name="MoveDirection">
+        <direction>down</direction>
+      </action>
+    </keybind>
+    <keybind key="W-C-Up">
+      <action name="MoveDirection">
+        <direction>up</direction>
+      </action>
+    </keybind>
+    <keybind key="W-C-Right">
+      <action name="MoveDirection">
+        <direction>right</direction>
+      </action>
+    </keybind>
+    
+    <!-- Focus first/last -->
+    <keybind key="W-Home">
+      <action name="FocusDirection">
+        <direction>left</direction>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="W-End">
+      <action name="FocusDirection">
+        <direction>right</direction>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    
+    <!-- Monitor focus -->
+    <keybind key="W-S-Left">
+      <action name="FocusMonitor">
+        <direction>left</direction>
+      </action>
+    </keybind>
+    <keybind key="W-S-Down">
+      <action name="FocusMonitor">
+        <direction>down</direction>
+      </action>
+    </keybind>
+    <keybind key="W-S-Up">
+      <action name="FocusMonitor">
+        <direction>up</direction>
+      </action>
+    </keybind>
+    <keybind key="W-S-Right">
+      <action name="FocusMonitor">
+        <direction>right</direction>
+      </action>
+    </keybind>
+    
+    <!-- Move to monitor -->
+    <keybind key="W-C-S-Left">
+      <action name="MoveToMonitor">
+        <direction>left</direction>
+      </action>
+    </keybind>
+    <keybind key="W-C-S-Down">
+      <action name="MoveToMonitor">
+        <direction>down</direction>
+      </action>
+    </keybind>
+    <keybind key="W-C-S-Up">
+      <action name="MoveToMonitor">
+        <direction>up</direction>
+      </action>
+    </keybind>
+    <keybind key="W-C-S-Right">
+      <action name="MoveToMonitor">
+        <direction>right</direction>
+      </action>
+    </keybind>
+    
+    <!-- Workspace navigation -->
+    <keybind key="W-Page_Down">
+      <action name="WorkspaceNext" />
+    </keybind>
+    <keybind key="W-Page_Up">
+      <action name="WorkspacePrevious" />
+    </keybind>
+    <keybind key="W-u">
+      <action name="WorkspaceNext" />
+    </keybind>
+    <keybind key="W-i">
+      <action name="WorkspacePrevious" />
+    </keybind>
+    
+    <!-- Move window to workspace -->
+    <keybind key="W-C-Page_Down">
+      <action name="SendToWorkspaceNext" />
+    </keybind>
+    <keybind key="W-C-Page_Up">
+      <action name="SendToWorkspacePrevious" />
+    </keybind>
+    <keybind key="W-C-u">
+      <action name="SendToWorkspaceNext" />
+    </keybind>
+    <keybind key="W-C-i">
+      <action name="SendToWorkspacePrevious" />
+    </keybind>
+    
+    <!-- Move workspace -->
+    <keybind key="W-S-Page_Down">
+      <action name="MoveWorkspaceNext" />
+    </keybind>
+    <keybind key="W-S-Page_Up">
+      <action name="MoveWorkspacePrevious" />
+    </keybind>
+    <keybind key="W-S-u">
+      <action name="MoveWorkspaceNext" />
+    </keybind>
+    <keybind key="W-S-i">
+      <action name="MoveWorkspacePrevious" />
+    </keybind>
+    
+    <!-- Workspace by index (1-9) -->
+    <keybind key="W-1">
+      <action name="Workspace">
+        <name>1</name>
+      </action>
+    </keybind>
+    <keybind key="W-2">
+      <action name="Workspace">
+        <name>2</name>
+      </action>
+    </keybind>
+    <keybind key="W-3">
+      <action name="Workspace">
+        <name>3</name>
+      </action>
+    </keybind>
+    <keybind key="W-4">
+      <action name="Workspace">
+        <name>4</name>
+      </action>
+    </keybind>
+    <keybind key="W-5">
+      <action name="Workspace">
+        <name>5</name>
+      </action>
+    </keybind>
+    <keybind key="W-6">
+      <action name="Workspace">
+        <name>6</name>
+      </action>
+    </keybind>
+    <keybind key="W-7">
+      <action name="Workspace">
+        <name>7</name>
+      </action>
+    </keybind>
+    <keybind key="W-8">
+      <action name="Workspace">
+        <name>8</name>
+      </action>
+    </keybind>
+    <keybind key="W-9">
+      <action name="Workspace">
+        <name>9</name>
+      </action>
+    </keybind>
+    
+    <!-- Move window to workspace by index -->
+    <keybind key="W-C-1">
+      <action name="SendToWorkspace">
+        <name>1</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-2">
+      <action name="SendToWorkspace">
+        <name>2</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-3">
+      <action name="SendToWorkspace">
+        <name>3</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-4">
+      <action name="SendToWorkspace">
+        <name>4</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-5">
+      <action name="SendToWorkspace">
+        <name>5</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-6">
+      <action name="SendToWorkspace">
+        <name>6</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-7">
+      <action name="SendToWorkspace">
+        <name>7</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-8">
+      <action name="SendToWorkspace">
+        <name>8</name>
+      </action>
+    </keybind>
+    <keybind key="W-C-9">
+      <action name="SendToWorkspace">
+        <name>9</name>
+      </action>
+    </keybind>
+    
+    <!-- Column/container management (approximate niri behavior) -->
+    <keybind key="W-bracketleft">
+      <action name="Execute">
+        <command>labwc-msg consume-or-expel left</command>
+      </action>
+    </keybind>
+    <keybind key="W-bracketright">
+      <action name="Execute">
+        <command>labwc-msg consume-or-expel right</command>
+      </action>
+    </keybind>
+    <keybind key="W-comma">
+      <action name="Execute">
+        <command>noctalia msg settings-toggle</command>
+      </action>
+    </keybind>
+    <keybind key="W-period">
+      <action name="Execute">
+        <command>labwc-msg expel-window</command>
+      </action>
+    </keybind>
+    
+    <!-- Resize presets -->
+    <keybind key="W-r">
+      <action name="Execute">
+        <command>labwc-msg switch-preset-width</command>
+      </action>
+    </keybind>
+    <keybind key="W-S-r">
+      <action name="Execute">
+        <command>labwc-msg switch-preset-width-back</command>
+      </action>
+    </keybind>
+    <keybind key="W-C-S-r">
+      <action name="Execute">
+        <command>labwc-msg switch-preset-height</command>
+      </action>
+    </keybind>
+    <keybind key="W-C-r">
+      <action name="Execute">
+        <command>labwc-msg reset-height</command>
+      </action>
+    </keybind>
+    
+    <!-- Layout -->
+    <keybind key="W-f">
+      <action name="ToggleMaximize" />
+    </keybind>
+    <keybind key="W-S-f">
+      <action name="ToggleFullscreen" />
+    </keybind>
+    <keybind key="W-m">
+      <action name="MaximizeToEdges" />
+    </keybind>
+    <keybind key="W-C-f">
+      <action name="Execute">
+        <command>labwc-msg expand-to-available</command>
+      </action>
+    </keybind>
+    <keybind key="W-c">
+      <action name="Execute">
+        <command>labwc-msg center-column</command>
+      </action>
+    </keybind>
+    <keybind key="W-C-c">
+      <action name="Execute">
+        <command>labwc-msg center-visible-columns</command>
+      </action>
+    </keybind>
+    
+    <!-- Floating & tabs -->
+    <keybind key="W-t">
+      <action name="ToggleFloating" />
+    </keybind>
+    <keybind key="W-S-v">
+      <action name="ToggleFocusFloating" />
+    </keybind>
+    <keybind key="W-w">
+      <action name="Execute">
+        <command>labwc-msg toggle-tabbed</command>
+      </action>
+    </keybind>
+    
+    <!-- Screenshots -->
+    <keybind key="Print">
+      <action name="Execute">
+        <command>grim ~/Pictures/Screenshots/Screenshot from $(date +%Y-%m-%d %H-%M-%S).png</command>
+      </action>
+    </keybind>
+    <keybind key="C-Print">
+      <action name="Execute">
+        <command>grim -o $(wlr-randr | grep " focused" | cut -d' ' -f1) ~/Pictures/Screenshots/Screenshot from $(date +%Y-%m-%d %H-%M-%S).png</command>
+      </action>
+    </keybind>
+    <keybind key="A-Print">
+      <action name="Execute">
+        <command>grim -g "$(slurp)" ~/Pictures/Screenshots/Screenshot from $(date +%Y-%m-%d %H-%M-%S).png</command>
+      </action>
+    </keybind>
+    
+    <!-- Keyboard shortcuts inhibit -->
+    <keybind key="W-Escape">
+      <action name="Execute">
+        <command>labwc-msg toggle-inhibit</command>
+      </action>
+    </keybind>
+    
+    <!-- Fn keys -->
+    <keybind key="XF86Calculator">
+      <action name="Execute">
+        <command>gnome-calculator</command>
+      </action>
+    </keybind>
+    <keybind key="XF86Favorites">
+      <action name="Execute">
+        <command>spotify-launcher</command>
+      </action>
+    </keybind>
+    <keybind key="W-p">
+      <action name="Execute">
+        <command>nwg-displays</command>
+      </action>
+    </keybind>
+    <keybind key="W-S-F23">
+      <action name="Execute">
+        <command>kitty -e copilot</command>
+      </action>
+    </keybind>
+    
+    <!-- Hotkey overlay -->
+    <keybind key="W-S-slash">
+      <action name="Execute">
+        <command>labwc-msg show-hotkeys</command>
+      </action>
+    </keybind>
+    
+    <!-- Reload config -->
+    <keybind key="W-S-c">
+      <action name="Reconfigure" />
+    </keybind>
+    
+    <!-- Exit menu -->
+    <keybind key="W-S-e">
+      <action name="ShowMenu">
+        <menu>root-menu</menu>
+      </action>
+    </keybind>
+  </keyboard>
+
+  <mouse>
+    <default />
+    <context name="Root">
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu">
+          <menu>root-menu</menu>
+        </action>
+      </mousebind>
+    </context>
+    <context name="Titlebar">
+      <mousebind button="Left" action="Press">
+        <action name="Focus" />
+        <action name="Raise" />
+      </mousebind>
+      <mousebind button="Left" action="Drag">
+        <action name="Move" />
+      </mousebind>
+      <mousebind button="Right" action="Drag">
+        <action name="Resize" />
+      </mousebind>
+    </context>
+  </mouse>
+
+  <window-rules>
+    <!-- Frosted glass base: all windows -->
+    <rule>
+      <window-type>normal</window-type>
+      <decorations>yes</decorations>
+      <opacity>0.85</opacity>
+      <corner-radius>20</corner-radius>
+    </rule>
+    
+    <!-- Focused window: higher opacity -->
+    <rule>
+      <window-type>normal</window-type>
+      <focused>yes</focused>
+      <opacity>0.95</opacity>
+      <corner-radius>20</corner-radius>
+    </rule>
+    
+    <!-- Noctalia settings window: floating -->
+    <rule>
+      <app-id>dev.noctalia.Noctalia.Settings</app-id>
+      <floating>true</floating>
+      <width>1080</width>
+      <height>920</height>
+      <centered>yes</centered>
+    </rule>
+    
+    <!-- Firefox picture-in-picture: floating -->
+    <rule>
+      <app-id>firefox</app-id>
+      <title>Picture-in-Picture</title>
+      <floating>true</floating>
+    </rule>
+    
+    <!-- Bitwarden extension: floating -->
+    <rule>
+      <app-id>firefox</app-id>
+      <title>Bitwarden</title>
+      <floating>true</floating>
+    </rule>
+    <rule>
+      <app-id>firefox</app-id>
+      <title>Extension:.*Bitwarden</title>
+      <floating>true</floating>
+    </rule>
+    
+    <!-- Firefox: slightly transparent -->
+    <rule>
+      <app-id>firefox</app-id>
+      <opacity>0.88</opacity>
+    </rule>
+    
+    <!-- Spotify: frosted glass -->
+    <rule>
+      <app-id>spotify</app-id>
+      <opacity>0.75</opacity>
+      <corner-radius>20</corner-radius>
+    </rule>
+    
+    <!-- VS Code -->
+    <rule>
+      <app-id>code</app-id>
+      <focused>yes</focused>
+      <opacity>0.75</opacity>
+    </rule>
+    <rule>
+      <app-id>code</app-id>
+      <focused>no</focused>
+      <opacity>0.6</opacity>
+    </rule>
+    
+    <!-- Vesktop (Discord) -->
+    <rule>
+      <app-id>vesktop</app-id>
+      <focused>yes</focused>
+      <opacity>0.7</opacity>
+    </rule>
+    <rule>
+      <app-id>vesktop</app-id>
+      <focused>no</focused>
+      <opacity>0.5</opacity>
+    </rule>
+    
+    <!-- Calculator: floating -->
+    <rule>
+      <app-id>org.gnome.Calculator</app-id>
+      <floating>true</floating>
+      <width>360</width>
+      <height>540</height>
+      <centered>yes</centered>
+    </rule>
+  </window-rules>
+
+  <layer-rules>
+    <rule>
+      <namespace>^noctalia-backdrop</namespace>
+      <layer>bottom</layer>
+    </rule>
+  </layer-rules>
+
+</labwc_config>

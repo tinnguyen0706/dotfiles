@@ -1,0 +1,110 @@
+# labwc themerc - based on niri noctalia theme
+# Colors from ~/.config/niri/noctalia.kdl
+
+# general
+border.width: 0
+
+window.titlebar.padding.width: 0
+window.titlebar.padding.height: 0
+
+# window border
+window.active.border.color: #5d65f5
+window.inactive.border.color: #e6e8fa
+
+# ToggleKeybinds status indicator
+window.active.indicator.toggled-keybind.color: #fd4663
+
+# window titlebar background
+window.active.title.bg.color: #5d65f5
+window.inactive.title.bg.color: #e6e8fa
+window.*.title.bg: Solid
+
+# window titlebar text
+window.active.label.text.color: #ffffff
+window.inactive.label.text.color: #888888
+window.label.text.justify: center
+
+# window button width and spacing
+window.button.width: 26
+window.button.height: 26
+window.button.spacing: 0
+
+# window button hover overlay
+window.button.hover.bg.color: #ffffff30
+window.button.hover.bg.corner-radius: 4
+
+# window buttons
+window.active.button.unpressed.image.color: #ffffff
+window.inactive.button.unpressed.image.color: #888888
+
+# window drop-shadows
+window.active.shadow.size: 40
+window.inactive.shadow.size: 20
+window.active.shadow.color: #f3edf7b0
+window.inactive.shadow.color: #00000030
+
+# menu
+menu.overlap.x: 0
+menu.overlap.y: 0
+menu.width.min: 20
+menu.width.max: 200
+menu.border.width: 0
+menu.border.color: #5d65f5
+menu.items.bg.color: #1e1e2e
+menu.items.text.color: #cdd6f4
+menu.items.active.bg.color: #5d65f5
+menu.items.active.text.color: #ffffff
+menu.items.padding.x: 12
+menu.items.padding.y: 8
+menu.separator.width: 1
+menu.separator.padding.width: 6
+menu.separator.padding.height: 3
+menu.separator.color: #5d65f580
+menu.title.bg.color: #5d65f5
+menu.title.text.color: #ffffff
+menu.title.text.justify: Center
+
+# on screen display (window-cycle dialog)
+osd.bg.color: #1e1e2e
+osd.border.color: #5d65f5
+osd.border.width: 2
+osd.label.text.color: #cdd6f4
+
+# width can be set as percent (of screen width)
+osd.window-switcher.style-classic.width: 600
+osd.window-switcher.style-classic.padding: 8
+osd.window-switcher.style-classic.item.padding.x: 12
+osd.window-switcher.style-classic.item.padding.y: 4
+osd.window-switcher.style-classic.item.active.border.width: 2
+osd.window-switcher.style-classic.item.active.border.color: #5d65f5
+osd.window-switcher.style-classic.item.active.bg.color: #313244
+osd.window-switcher.style-classic.item.icon.size: 32
+
+osd.window-switcher.style-thumbnail.width.max: 80%
+osd.window-switcher.style-thumbnail.padding: 8
+osd.window-switcher.style-thumbnail.item.width: 300
+osd.window-switcher.style-thumbnail.item.height: 250
+osd.window-switcher.style-thumbnail.item.padding: 10
+osd.window-switcher.style-thumbnail.item.active.border.width: 2
+osd.window-switcher.style-thumbnail.item.active.border.color: #5d65f5
+osd.window-switcher.style-thumbnail.item.active.bg.color: #313244
+osd.window-switcher.style-thumbnail.item.icon.size: 48
+
+osd.window-switcher.preview.border.width: 1
+osd.window-switcher.preview.border.color: #5d65f5
+
+osd.workspace-switcher.boxes.width: 20
+osd.workspace-switcher.boxes.height: 20
+osd.workspace-switcher.boxes.border.width: 2
+osd.workspace-switcher.boxes.active.border.color: #5d65f5
+osd.workspace-switcher.boxes.active.bg.color: #5d65f5
+osd.workspace-switcher.boxes.inactive.border.color: #e6e8fa
+osd.workspace-switcher.boxes.inactive.bg.color: #1e1e2e
+
+# snapping overlays
+snapping.overlay.region.bg.color: #5d65f540
+snapping.overlay.edge.bg.color: #5d65f540
+snapping.overlay.region.border.width: 2
+snapping.overlay.edge.border.width: 2
+snapping.overlay.region.border.color: #5d65f5
+snapping.overlay.edge.border.color: #5d65f5
