@@ -1,46 +1,46 @@
 # Auto-generated from palette.json
 [app]
-overall = { bg = "#fff8f6" }
+overall = { bg = "#eededa" }
 [mgr]
-cwd = { fg = "#32201c", bold = true }
-find_keyword = { fg = "#231917", bg = "#f1dfdb", bold = true }
+cwd = { fg = "#170f0e", bold = true }
+find_keyword = { fg = "#160f0e", bg = "#e2c9c3", bold = true }
 border_style = { fg = "#85736f" }
 [indicator]
-parent = { fg = "#ffffff", bg = "#2f211f" }
-current = { fg = "#ffffff", bg = "#32201c" }
-preview = { fg = "#ffffff", bg = "#2d221a" }
+parent = { fg = "#ffffff", bg = "#170f0e" }
+current = { fg = "#ffffff", bg = "#170f0e" }
+preview = { fg = "#ffffff", bg = "#170f0e" }
 [tabs]
-active = { fg = "#231917", bg = "#fff0ed" }
-inactive = { fg = "#2d2220", bg = "#f7e4e0" }
+active = { fg = "#160f0e", bg = "#eed7d2" }
+inactive = { fg = "#170f0e", bg = "#e8cdc7" }
 [mode]
-normal_main = { fg = "#ffffff", bg = "#32201c", bold = true }
-select_main = { fg = "#ffffff", bg = "#2d221a", bold = true }
-unset_main = { fg = "#ffffff", bg = "#2f211f", bold = true }
+normal_main = { fg = "#ffffff", bg = "#170f0e", bold = true }
+select_main = { fg = "#ffffff", bg = "#170f0e", bold = true }
+unset_main = { fg = "#ffffff", bg = "#170f0e", bold = true }
 [status]
-overall = { fg = "#231917", bg = "#f7e4e0" }
-perm_read = { fg = "#15290b" }
-perm_write = { fg = "#4c0914" }
-perm_exec = { fg = "#12224b" }
+overall = { fg = "#160f0e", bg = "#e8cdc7" }
+perm_read = { fg = "#0a1305" }
+perm_write = { fg = "#27050a" }
+perm_exec = { fg = "#081024" }
 [which]
-mask = { bg = "#fff0ed" }
-cand = { fg = "#32201c", bold = true }
-rest = { fg = "#231917" }
-desc = { fg = "#2d2220" }
+mask = { bg = "#eed7d2" }
+cand = { fg = "#170f0e", bold = true }
+rest = { fg = "#160f0e" }
+desc = { fg = "#170f0e" }
 [confirm]
-border = { fg = "#85736f", bg = "#fff8f6" }
-title = { fg = "#231917", bg = "#fff8f6", bold = true }
-body = { fg = "#231917", bg = "#fff8f6" }
-btn_yes = { fg = "#ffffff", bg = "#32201c", bold = true }
-btn_no = { fg = "#231917", bg = "#f7e4e0" }
+border = { fg = "#85736f", bg = "#eededa" }
+title = { fg = "#160f0e", bg = "#eededa", bold = true }
+body = { fg = "#160f0e", bg = "#eededa" }
+btn_yes = { fg = "#ffffff", bg = "#170f0e", bold = true }
+btn_no = { fg = "#160f0e", bg = "#e8cdc7" }
 [notify]
-title_info = { fg = "#ffffff", bg = "#32201c" }
-title_warn = { fg = "#ffffff", bg = "#352007" }
-title_error = { fg = "#ffffff", bg = "#4c0914" }
+title_info = { fg = "#ffffff", bg = "#170f0e" }
+title_warn = { fg = "#ffffff", bg = "#190f03" }
+title_error = { fg = "#ffffff", bg = "#27050a" }
 [input]
-border = { fg = "#32201c", bg = "#fff8f6" }
-value = { fg = "#231917", bg = "#fff8f6" }
-selected = { fg = "#231917", bg = "#f1dfdb" }
+border = { fg = "#170f0e", bg = "#eededa" }
+value = { fg = "#160f0e", bg = "#eededa" }
+selected = { fg = "#160f0e", bg = "#e2c9c3" }
 [help]
-on = { fg = "#32201c", bold = true }
-run = { fg = "#231917" }
-desc = { fg = "#2d2220" }
+on = { fg = "#170f0e", bold = true }
+run = { fg = "#160f0e" }
+desc = { fg = "#170f0e" }
