@@ -98,24 +98,24 @@ continuation_prompt = '▶▶ '
 
 [directory]
 disabled = false
-format = "[$path](bold fg:#107a80)"
+format = "[$path](bold fg:#32201c)"
 truncate_to_repo = false
 # home_symbol = "" 
 
 [git_branch]
-format = " [  $branch](fg:#9198a1)"
+format = " [  $branch](fg:#2d2220)"
 
 [git_status]
 ahead = '⇡${count}'
 behind = '⇣${count}'
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'
-format = '[[( $all_status$ahead_behind )](fg:#769ff0)]($style)'
-style = "bg:#394260"
+format = '[[( $all_status$ahead_behind )](fg:#32201c)]($style)'
+style = "bg:#f7e4e0"
 
 
 [time]
 disabled = false
-format = '[[  $time ](fg:#a0a9cb )]($style)'
+format = '[[  $time ](fg:#2d2220 )]($style)'
 time_format = "%R"                            # Hour:Minute Format
 
 [deno]
@@ -266,12 +266,12 @@ format = " nim [$symbol]($style)"
 symbol = "▴▲▴ "
 
 [nix_shell]
-format = '[$symbol nix⎪$state⎪]($style) [$name](italic dimmed white)'
-impure_msg = '[⌽](bold dimmed red)'
-pure_msg = '[⌾](bold dimmed green)'
-style = 'bold italic dimmed blue'
+format = '[$symbol nix⎪$state⎪]($style) [$name](italic white)'
+impure_msg = '[⌽](bold red)'
+pure_msg = '[⌾](bold green)'
+style = 'bold italic blue'
 symbol = ' '
-unknown_msg = '[◌](bold dimmed ellow)'
+unknown_msg = '[◌](bold ellow)'
 
 [spack]
 style = "bold bright-yellow"
