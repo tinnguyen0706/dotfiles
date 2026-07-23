@@ -65,10 +65,49 @@ config pull          # pull từ GitHub (máy mới update)
 
 ## Theming
 
-```bash
-# List themes
-ls ~/.config/niri/*.kdl
+Màu được sinh từ wallpaper bằng Noctalia `m3-tonal-spot` ở light mode. `palette.json`
+là nguồn màu chung cho Kitty, Starship, Zsh, btop, Yazi, OpenCode, Vesktop và Neovim.
 
-# Swith theme (nếu đã cấu hình update-theme.py)
-~/.config/update-theme.py <tên_theme>
+```bash
+# Áp dụng lại palette.json hiện có
+~/.config/update-theme.py
+
+# Sinh palette từ wallpaper rồi cập nhật tất cả ứng dụng
+~/.config/update-theme.py --wallpaper /đường/dẫn/wallpaper.jpg
+
+# Chỉ kiểm tra màu và tương phản, không ghi file
+~/.config/update-theme.py --check --wallpaper /đường/dẫn/wallpaper.jpg
 ```
+
+### Hook đổi wallpaper của Noctalia
+
+Noctalia lưu cấu hình đang hoạt động tại `~/.local/state/noctalia/settings.toml`.
+Trên máy mới, thêm hook sau vào section `[hooks]`:
+
+```toml
+[hooks]
+wallpaper_changed = "~/.config/update-theme.py --wallpaper \"$NOCTALIA_WALLPAPER_PATH\""
+```
+
+Trong section `[theme]`, dùng cùng scheme với script:
+
+```toml
+[theme]
+mode = "light"
+source = "wallpaper"
+wallpaper_scheme = "m3-tonal-spot"
+```
+
+Chỉ dùng `wallpaper_changed`; không thêm đồng thời `colors_changed`, nếu không một lần
+đổi wallpaper có thể chạy cập nhật theme nhiều lần.
+
+Kiểm tra cấu hình và theo dõi hook:
+
+```bash
+noctalia config validate ~/.local/state/noctalia/settings.toml
+tail -f ~/.cache/noctalia/noctalia.log \
+  | rg --line-buffered 'wallpaper_changed|changing'
+```
+
+Khi hoạt động đúng, log sẽ có `hook 'wallpaper_changed' running 1 command(s)` và
+trường `source` trong `~/.config/palette.json` sẽ trỏ tới wallpaper vừa chọn.
