@@ -98,24 +98,24 @@ continuation_prompt = '▶▶ '
 
 [directory]
 disabled = false
-format = "[$path](bold fg:#32201c)"
+format = "[$path](bold fg:#170f0e)"
 truncate_to_repo = false
 # home_symbol = "" 
 
 [git_branch]
-format = " [  $branch](fg:#2d2220)"
+format = " [  $branch](fg:#170f0e)"
 
 [git_status]
 ahead = '⇡${count}'
 behind = '⇣${count}'
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'
-format = '[[( $all_status$ahead_behind )](fg:#32201c)]($style)'
-style = "bg:#f7e4e0"
+format = '[[( $all_status$ahead_behind )](fg:#170f0e)]($style)'
+style = "bg:#e8cdc7"
 
 
 [time]
 disabled = false
-format = '[[  $time ](fg:#2d2220 )]($style)'
+format = '[[  $time ](fg:#170f0e )]($style)'
 time_format = "%R"                            # Hour:Minute Format
 
 [deno]

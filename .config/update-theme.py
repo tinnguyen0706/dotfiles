@@ -21,6 +21,7 @@ MIN_TEXT = 7.0
 MIN_FOREGROUND = 7.0
 KITTY_OPACITY = 0.70
 HARMONIZE_AMOUNT = 0.15
+BACKGROUND_TINT = 0.15
 
 ANSI_ANCHORS = {
     "red": "#b80f2e", "green": "#2e801e", "yellow": "#c47a14",
@@ -39,7 +40,8 @@ REQUIRED_M3 = {
 
 ANSI_FAMILIES = {
     "red": (340, 20), "green": (80, 155), "yellow": (25, 75),
-    "blue": (195, 260), "magenta": (285, 340), "cyan": (155, 195),
+    # Chừa biên cyan/blue cho sai số lượng tử khi màu bị darken gần #000000.
+    "blue": (200, 260), "magenta": (285, 340), "cyan": (155, 205),
 }
 
 
@@ -139,23 +141,28 @@ def noctalia_tokens(wallpaper: Path) -> dict[str, str]:
 
 
 def build_palette(tokens: dict[str, str], wallpaper: Path) -> dict[str, str]:
-    surface = tokens["surface"]
-    surfaces = [surface, tokens["surface_container_low"], tokens["surface_container_high"]]
+    # Tint toàn bộ neutral surface bằng primary gốc để light mode vẫn đổi tông rõ.
+    # Không dùng primary đã hiệu chỉnh tương phản vì màu đó là role chữ.
+    surface = mix(tokens["surface"], tokens["primary"], BACKGROUND_TINT)
+    surface_low = mix(tokens["surface_container_low"], tokens["primary"], BACKGROUND_TINT)
+    surface_high = mix(tokens["surface_container_high"], tokens["primary"], BACKGROUND_TINT)
+    selection = mix(tokens["surface_container_highest"], tokens["primary"], BACKGROUND_TINT)
+    surfaces = [surface, surface_low, surface_high]
     transparent = [composite(surface, "#000000", KITTY_OPACITY),
                    composite(surface, "#ffffff", KITTY_OPACITY)]
     text_backgrounds = surfaces + transparent
     foreground = readable(tokens["on_surface"], "#000000", text_backgrounds, MIN_FOREGROUND)
-    p: dict[str, str] = {
+    p: dict[str, str | float] = {
         "source": str(wallpaper.resolve()), "scheme": SCHEME, "mode": MODE,
         "source_color": tokens["source_color"],
+        "background_tint": BACKGROUND_TINT, "background_tint_source": "primary",
         "background": surface, "foreground": foreground, "cursor": foreground,
-        "surface_low": tokens["surface_container_low"], "surface": surface,
-        "surface_high": tokens["surface_container_high"],
+        "surface_low": surface_low, "surface": surface, "surface_high": surface_high,
         "muted": readable(tokens["on_surface_variant"], foreground, text_backgrounds),
         "border": tokens["outline"],
         "border_subtle": tokens["outline_variant"],
-        "selection": tokens["surface_container_highest"],
-        "selection_text": readable(foreground, "#000000", [tokens["surface_container_highest"]]),
+        "selection": selection,
+        "selection_text": readable(foreground, "#000000", [selection]),
     }
     for name in ("primary", "secondary", "tertiary"):
         p[name] = readable(tokens[name], foreground, text_backgrounds)
@@ -178,6 +185,8 @@ def build_palette(tokens: dict[str, str], wallpaper: Path) -> dict[str, str]:
 
 
 def validate_palette(p: dict[str, str], text_backgrounds: list[str] | None = None) -> None:
+    if p.get("background_tint") != BACKGROUND_TINT or p.get("background_tint_source") != "primary":
+        raise ValueError("Metadata background tint không hợp lệ")
     surfaces = [p["background"], p["surface_low"], p["surface"], p["surface_high"]]
     if text_backgrounds is None:
         text_backgrounds = surfaces + [
@@ -213,6 +222,7 @@ def report(p: dict[str, str]) -> None:
                    composite(p["background"], "#000000", KITTY_OPACITY),
                    composite(p["background"], "#ffffff", KITTY_OPACITY)]
     print(f"Nguồn: {p.get('source', 'palette.json')} | {p.get('scheme', SCHEME)} | {p.get('mode', MODE)}")
+    print(f"  background      {p['background']}  (surface tint primary {BACKGROUND_TINT:.0%})")
     for name in ("foreground", "muted", "red", "green", "yellow", "blue", "magenta", "cyan"):
         ratios = [contrast(p[name], bg) for bg in backgrounds]
         print(f"  {name:15} {p[name]}  min={min(ratios):.2f}:1")

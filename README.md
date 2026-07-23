@@ -67,6 +67,8 @@ config pull          # pull từ GitHub (máy mới update)
 
 Màu được sinh từ wallpaper bằng Noctalia `m3-tonal-spot` ở light mode. `palette.json`
 là nguồn màu chung cho Kitty, Starship, Zsh, btop, Yazi, OpenCode, Vesktop và Neovim.
+Các surface được tint 15% bằng `primary` gốc để màu nền thay đổi rõ theo wallpaper;
+mọi role chữ vẫn phải đạt tương phản tối thiểu `7:1`, kể cả Kitty opacity `0.70`.
 
 ```bash
 # Áp dụng lại palette.json hiện có
