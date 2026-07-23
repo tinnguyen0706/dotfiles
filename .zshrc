@@ -14,7 +14,7 @@ eval "$(starship init zsh)"
 
 # zsh-autosuggestions
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=245"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#2d2220'
 
 # zsh-syntax-highlighting (phải ở cuối cùng)
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

@@ -19,9 +19,9 @@ function M.setup()
 
   require('base16-colorscheme').setup({
     base00 = p.background,
-    base01 = '#e6e9ef',
-    base02 = '#ccd0da',
-    base03 = p.white,
+    base01 = p.surface_low,
+    base02 = p.surface_high,
+    base03 = p.muted,
     base04 = p.bright_black,
     base05 = p.foreground,
     base06 = p.foreground,
@@ -41,17 +41,17 @@ function M.setup()
   end
 
   hi('TelescopeNormal',         { fg = p.foreground,  bg = p.background })
-  hi('TelescopeBorder',         { fg = p.white,       bg = p.background })
+  hi('TelescopeBorder',         { fg = p.border,      bg = p.background })
   hi('TelescopePromptNormal',   { fg = p.foreground,  bg = p.background })
-  hi('TelescopePromptBorder',   { fg = p.white,       bg = p.background })
-  hi('TelescopePromptPrefix',   { fg = p.blue,        bg = p.background })
-  hi('TelescopePromptCounter',  { fg = p.bright_black,bg = p.background })
-  hi('TelescopePromptTitle',    { fg = p.background,  bg = p.blue })
-  hi('TelescopePreviewTitle',   { fg = p.background,  bg = p.cyan })
-  hi('TelescopeResultsTitle',   { fg = p.background,  bg = p.magenta })
-  hi('TelescopeSelection',      { fg = p.foreground,  bg = '#ccd0da' })
-  hi('TelescopeSelectionCaret', { fg = p.blue,        bg = '#ccd0da' })
-  hi('TelescopeMatching',       { fg = p.blue,        bold = true })
+  hi('TelescopePromptBorder',   { fg = p.border,      bg = p.background })
+  hi('TelescopePromptPrefix',   { fg = p.primary,     bg = p.background })
+  hi('TelescopePromptCounter',  { fg = p.muted,       bg = p.background })
+  hi('TelescopePromptTitle',    { fg = p.on_primary,  bg = p.primary })
+  hi('TelescopePreviewTitle',   { fg = p.on_secondary,bg = p.secondary })
+  hi('TelescopeResultsTitle',   { fg = p.on_tertiary, bg = p.tertiary })
+  hi('TelescopeSelection',      { fg = p.selection_text, bg = p.selection })
+  hi('TelescopeSelectionCaret', { fg = p.primary,     bg = p.selection })
+  hi('TelescopeMatching',       { fg = p.primary,     bold = true })
 end
 
 local signal = vim.uv.new_signal()
