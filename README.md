@@ -14,7 +14,8 @@ Cấu hình Linux Arch Linux + Zsh + Niri + Kitty + Neovim của tôi.
 | **File manager** | `.config/yazi/` |
 | **Resource monitor** | `.config/btop/` |
 | **System fetch** | `.config/fastfetch/config.jsonc` |
-| **Theme switcher** | `.config/update-theme.py`, `.config/palette.json` |
+| **Theme generator** | `.config/update-theme.py`, `.config/palette.json` |
+| **Wallpaper watcher** | `.config/systemd/user/wallpaper-engine-palette.*` |
 | **X resources** | `.Xresources` |
 | **VS Code flags** | `.config/code-flags.conf` |
 | **Spotify flags** | `.config/spotify-launcher.conf` |
@@ -22,7 +23,7 @@ Cấu hình Linux Arch Linux + Zsh + Niri + Kitty + Neovim của tôi.
 ## Cài đặt (trên máy mới)
 
 ```bash
-sudo pacman -S git zsh kitty neovim yazi niri btop fastfetch starship
+sudo pacman -S git zsh kitty neovim yazi niri btop fastfetch starship python-pillow
 
 git clone --bare https://github.com/tinnguyen0706/dotfiles.git ~/.dotfiles
 alias config='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
@@ -65,10 +66,15 @@ config pull          # pull từ GitHub (máy mới update)
 
 ## Theming
 
-Màu được sinh từ wallpaper bằng Noctalia `m3-tonal-spot` ở light mode. `palette.json`
-là nguồn màu chung cho Kitty, Starship, Zsh, btop, Yazi, OpenCode, Vesktop và Neovim.
-Các surface được tint 15% bằng `primary` gốc để màu nền thay đổi rõ theo wallpaper;
-mọi role chữ vẫn phải đạt tương phản tối thiểu `7:1`, kể cả Kitty opacity `0.70`.
+Màu được sinh từ wallpaper bằng Noctalia `m3-tonal-spot`. `palette.json` chứa hai lớp:
+
+- Palette root luôn là **light**, dành cho Noctalia, Vesktop và ứng dụng GUI.
+- `terminal` tự chọn **light/dark** theo độ sáng wallpaper, dùng chung cho Kitty,
+  Starship, Zsh, btop, Yazi, OpenCode và Neovim.
+
+Role chữ của light palette đạt tối thiểu `7:1`; dark terminal palette đạt tối thiểu
+`4.5:1`. Yazi, btop, OpenCode và Neovim kế thừa nền trong suốt của Kitty thay vì
+tự phủ nền chính.
 
 ```bash
 # Áp dụng lại palette.json hiện có
@@ -76,6 +82,9 @@ mọi role chữ vẫn phải đạt tương phản tối thiểu `7:1`, kể c�
 
 # Sinh palette từ wallpaper rồi cập nhật tất cả ứng dụng
 ~/.config/update-theme.py --wallpaper /đường/dẫn/wallpaper.jpg
+
+# Sinh palette từ preview của project Linux Wallpaper Engine đang chạy
+~/.config/update-theme.py --wallpaper-engine --connector eDP-1
 
 # Chỉ kiểm tra màu và tương phản, không ghi file
 ~/.config/update-theme.py --check --wallpaper /đường/dẫn/wallpaper.jpg
@@ -113,3 +122,29 @@ tail -f ~/.cache/noctalia/noctalia.log \
 
 Khi hoạt động đúng, log sẽ có `hook 'wallpaper_changed' running 1 command(s)` và
 trường `source` trong `~/.config/palette.json` sẽ trỏ tới wallpaper vừa chọn.
+
+### Linux Wallpaper Engine
+
+Script đọc project đang hoạt động từ:
+
+```text
+~/.config/Linux Wallpaper Engine/active-wallpapers.json
+```
+
+Hai user unit theo dõi file này và sinh lại palette khi đổi project:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now wallpaper-engine-palette.path
+systemctl --user status wallpaper-engine-palette.path
+```
+
+Watcher dùng ảnh `preview` trong `project.json` để lấy màu. Phiên Kitty đang mở được
+reload qua Unix socket; sau lần cài đầu tiên cần đóng toàn bộ Kitty và mở lại một lần
+để socket được tạo. Yazi, btop và OpenCode nhận theme mới ở lần mở kế tiếp.
+
+## Transparency và blur
+
+Niri dùng chung blur `passes 2`, `offset 2.0`, `noise 0.015` cho mọi cửa sổ. App GUI
+dùng opacity `0.82` cả khi focus và không focus. Kitty giữ opacity cửa sổ `1.0` để
+chữ luôn rõ, đồng thời dùng `background_opacity 0.70` để wallpaper hiện qua phần nền.

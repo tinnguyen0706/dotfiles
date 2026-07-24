@@ -7,7 +7,15 @@ local function load_palette()
   local content = fd:read('*a')
   fd:close()
   local ok, data = pcall(vim.json.decode, content)
-  return ok and data or nil
+  if not ok or not data then return nil end
+
+  -- Root palette luôn light cho GUI; terminal palette đi cùng Kitty.
+  local terminal = data.terminal or data.kitty
+  if type(terminal) == 'table' and type(terminal.colors) == 'table' then
+    data = vim.tbl_extend('force', data, terminal.colors)
+    data.mode = terminal.mode or data.mode
+  end
+  return data
 end
 
 function M.setup()
@@ -40,12 +48,16 @@ function M.setup()
     vim.api.nvim_set_hl(0, group, opts)
   end
 
-  hi('TelescopeNormal',         { fg = p.foreground,  bg = p.background })
-  hi('TelescopeBorder',         { fg = p.border,      bg = p.background })
-  hi('TelescopePromptNormal',   { fg = p.foreground,  bg = p.background })
-  hi('TelescopePromptBorder',   { fg = p.border,      bg = p.background })
-  hi('TelescopePromptPrefix',   { fg = p.primary,     bg = p.background })
-  hi('TelescopePromptCounter',  { fg = p.muted,       bg = p.background })
+  hi('Normal',                  { fg = p.foreground,  bg = 'NONE' })
+  hi('NormalNC',                { fg = p.foreground,  bg = 'NONE' })
+  hi('SignColumn',              { fg = p.muted,       bg = 'NONE' })
+  hi('EndOfBuffer',             { fg = p.background,  bg = 'NONE' })
+  hi('TelescopeNormal',         { fg = p.foreground,  bg = 'NONE' })
+  hi('TelescopeBorder',         { fg = p.border,      bg = 'NONE' })
+  hi('TelescopePromptNormal',   { fg = p.foreground,  bg = 'NONE' })
+  hi('TelescopePromptBorder',   { fg = p.border,      bg = 'NONE' })
+  hi('TelescopePromptPrefix',   { fg = p.primary,     bg = 'NONE' })
+  hi('TelescopePromptCounter',  { fg = p.muted,       bg = 'NONE' })
   hi('TelescopePromptTitle',    { fg = p.on_primary,  bg = p.primary })
   hi('TelescopePreviewTitle',   { fg = p.on_secondary,bg = p.secondary })
   hi('TelescopeResultsTitle',   { fg = p.on_tertiary, bg = p.tertiary })

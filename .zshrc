@@ -14,8 +14,18 @@ eval "$(starship init zsh)"
 
 # zsh-autosuggestions
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#170f0e'
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#d3d0d9'
 
 # zsh-syntax-highlighting (phải ở cuối cùng)
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Fastfetch with random quote
+alias ff='~/.config/fastfetch/fastfetch.sh'
+
 alias config='git --git-dir=/home/tinhiem/.dotfiles/ --work-tree=/home/tinhiem'
+
+# >>> Codex installer >>>
+export PATH="/home/tinhiem/.local/bin:$PATH"
+# <<< Codex installer <<<
+alias pandock='docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) -e HOME=/tmp pandoc-vi'
+alias update='~/.config/update-system.sh'
