@@ -15,7 +15,7 @@ Cấu hình Linux Arch Linux + Zsh + Niri + Kitty + Neovim của tôi.
 | **Resource monitor** | `.config/btop/` |
 | **System fetch** | `.config/fastfetch/config.jsonc` |
 | **Theme generator** | `.config/update-theme.py`, `.config/palette.json` |
-| **Wallpaper watcher** | `.config/systemd/user/wallpaper-engine-palette.*` |
+| **Wallpaper watcher** | `.config/systemd/user/waywallen-palette.*` |
 | **X resources** | `.Xresources` |
 | **VS Code flags** | `.config/code-flags.conf` |
 | **Spotify flags** | `.config/spotify-launcher.conf` |
@@ -24,6 +24,7 @@ Cấu hình Linux Arch Linux + Zsh + Niri + Kitty + Neovim của tôi.
 
 ```bash
 sudo pacman -S git zsh kitty neovim yazi niri btop fastfetch starship python-pillow
+paru -S waywallen waywallen-display open-wallpaper-engine
 
 git clone --bare https://github.com/tinnguyen0706/dotfiles.git ~/.dotfiles
 alias config='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
@@ -83,8 +84,8 @@ tự phủ nền chính.
 # Sinh palette từ wallpaper rồi cập nhật tất cả ứng dụng
 ~/.config/update-theme.py --wallpaper /đường/dẫn/wallpaper.jpg
 
-# Sinh palette từ preview của project Linux Wallpaper Engine đang chạy
-~/.config/update-theme.py --wallpaper-engine --connector eDP-1
+# Sinh palette từ preview của wallpaper Waywallen đang chạy
+~/.config/update-theme.py --waywallen
 
 # Chỉ kiểm tra màu và tương phản, không ghi file
 ~/.config/update-theme.py --check --wallpaper /đường/dẫn/wallpaper.jpg
@@ -123,25 +124,28 @@ tail -f ~/.cache/noctalia/noctalia.log \
 Khi hoạt động đúng, log sẽ có `hook 'wallpaper_changed' running 1 command(s)` và
 trường `source` trong `~/.config/palette.json` sẽ trỏ tới wallpaper vừa chọn.
 
-### Linux Wallpaper Engine
+### Waywallen + Open Wallpaper Engine
 
-Script đọc project đang hoạt động từ:
+Open Wallpaper Engine cung cấp renderer scene/web dưới dạng plugin của Waywallen.
+Script lấy item đang hoạt động từ cấu hình và tra preview trong database:
 
 ```text
-~/.config/Linux Wallpaper Engine/active-wallpapers.json
+~/.config/waywallen/config.toml
+~/.local/share/waywallen/waywallen-v2.db
 ```
 
-Hai user unit theo dõi file này và sinh lại palette khi đổi project:
+Niri tự chạy `waywallen --no-ui` để phục hồi wallpaper mà không mở cửa sổ quản lý.
+Hai user unit theo dõi config và sinh lại palette khi đổi wallpaper:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user enable --now wallpaper-engine-palette.path
-systemctl --user status wallpaper-engine-palette.path
+systemctl --user enable --now waywallen-palette.path
+systemctl --user status waywallen-palette.path
 ```
 
-Watcher dùng ảnh `preview` trong `project.json` để lấy màu. Phiên Kitty đang mở được
-reload qua Unix socket; sau lần cài đầu tiên cần đóng toàn bộ Kitty và mở lại một lần
-để socket được tạo. Yazi, btop và OpenCode nhận theme mới ở lần mở kế tiếp.
+Watcher dùng `preview_path` của item để lấy màu. Phiên Kitty đang mở được reload qua
+Unix socket; sau lần cài đầu tiên cần đóng toàn bộ Kitty và mở lại một lần để socket
+được tạo. Yazi, btop và OpenCode nhận theme mới ở lần mở kế tiếp.
 
 ## Transparency và blur
 

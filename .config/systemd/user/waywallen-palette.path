@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch Waywallen for wallpaper changes
+
+[Path]
+PathChanged=%h/.config/waywallen/config.toml
+Unit=waywallen-palette.service
+
+[Install]
+WantedBy=default.target

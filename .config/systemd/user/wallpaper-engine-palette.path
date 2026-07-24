@@ -1,9 +1,0 @@
-[Unit]
-Description=Watch Linux Wallpaper Engine for wallpaper changes
-
-[Path]
-PathChanged=%h/.config/Linux Wallpaper Engine/active-wallpapers.json
-Unit=wallpaper-engine-palette.service
-
-[Install]
-WantedBy=default.target

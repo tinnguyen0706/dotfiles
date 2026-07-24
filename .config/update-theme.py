@@ -9,10 +9,12 @@ import json
 import os
 from pathlib import Path
 import re
+import sqlite3
 import subprocess
 import sys
 import tempfile
 import time
+import tomllib
 
 from PIL import Image, ImageOps
 
@@ -25,13 +27,9 @@ MIN_FOREGROUND = 7.0
 KITTY_OPACITY = 0.70
 HARMONIZE_AMOUNT = 0.15
 MODE_LUMA_THRESHOLD = 0.50
-GENERATOR_VERSION = 4
-WALLPAPER_ENGINE_STATE = (
-    Path.home() / ".config/Linux Wallpaper Engine/active-wallpapers.json"
-)
-WALLPAPER_ENGINE_PREVIEWS = (
-    "preview.png", "preview.jpg", "preview.jpeg", "preview.webp", "preview.gif",
-)
+GENERATOR_VERSION = 5
+WAYWALLEN_CONFIG = Path.home() / ".config/waywallen/config.toml"
+WAYWALLEN_DB = Path.home() / ".local/share/waywallen/waywallen-v2.db"
 
 ANSI_ANCHORS = {
     "red": "#b80f2e", "green": "#2e801e", "yellow": "#c47a14",
@@ -169,64 +167,80 @@ def wallpaper_luma(wallpaper: Path) -> float:
         return total / (image.width * image.height)
 
 
-def read_json_retry(path: Path, attempts: int = 6, delay: float = 0.10) -> dict:
-    """Đọc JSON có retry vì Wallpaper Engine có thể đang thay nội dung file."""
+def read_toml_retry(path: Path, attempts: int = 6, delay: float = 0.10) -> dict:
+    """Đọc TOML có retry vì Waywallen ghi lại config khi đổi wallpaper."""
     last_error: Exception | None = None
     for attempt in range(attempts):
         try:
-            data = json.loads(path.read_text())
+            with path.open("rb") as stream:
+                data = tomllib.load(stream)
             if not isinstance(data, dict):
-                raise ValueError(f"JSON gốc trong {path} không phải object")
+                raise ValueError(f"TOML gốc trong {path} không phải table")
             return data
-        except (OSError, ValueError, json.JSONDecodeError) as exc:
+        except (OSError, ValueError, tomllib.TOMLDecodeError) as exc:
             last_error = exc
             if attempt + 1 < attempts:
                 time.sleep(delay)
-    raise ValueError(f"Không đọc được JSON {path}: {last_error}")
+    raise ValueError(f"Không đọc được TOML {path}: {last_error}")
 
 
-def resolve_wallpaper_engine(connector: str) -> tuple[Path, dict]:
-    state = read_json_retry(WALLPAPER_ENGINE_STATE)
-    active = state.get("activeWallpapers")
-    if not isinstance(active, dict) or not active:
-        raise ValueError("Wallpaper Engine chưa có wallpaper đang hoạt động")
+def resolve_waywallen(attempts: int = 6, delay: float = 0.10) -> tuple[Path, dict]:
+    settings = read_toml_retry(WAYWALLEN_CONFIG, attempts, delay)
+    global_settings = settings.get("global")
+    if not isinstance(global_settings, dict):
+        raise ValueError("Waywallen thiếu section [global]")
+    raw_item_id = global_settings.get("last_wallpaper")
+    try:
+        item_id = int(raw_item_id)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("Waywallen chưa có last_wallpaper hợp lệ") from exc
 
-    selected_connector = connector
-    selected = active.get(connector)
-    if not isinstance(selected, dict) and len(active) == 1:
-        selected_connector, selected = next(iter(active.items()))
-    if not isinstance(selected, dict):
-        available = ", ".join(sorted(active))
-        raise ValueError(f"Không có connector {connector}; hiện có: {available}")
+    query = """
+        SELECT i.type, i.display_name, i.path, i.preview_path, i.external_id,
+               l.path, s.name
+        FROM item AS i
+        JOIN library AS l ON l.id = i.library_id
+        JOIN source_plugin AS s ON s.id = i.plugin_id
+        WHERE i.id = ?
+    """
+    row = None
+    last_error: Exception | None = None
+    for attempt in range(attempts):
+        try:
+            uri = f"{WAYWALLEN_DB.resolve().as_uri()}?mode=ro"
+            with sqlite3.connect(uri, uri=True, timeout=1.0) as database:
+                row = database.execute(query, (item_id,)).fetchone()
+            break
+        except (OSError, sqlite3.Error) as exc:
+            last_error = exc
+            if attempt + 1 < attempts:
+                time.sleep(delay)
+    if last_error is not None and row is None:
+        raise ValueError(f"Không đọc được database Waywallen: {last_error}")
+    if row is None:
+        raise ValueError(f"Waywallen không tìm thấy wallpaper item {item_id}")
 
-    background_id = selected.get("backgroundId")
-    if not isinstance(background_id, str) or not background_id:
-        raise ValueError(f"Wallpaper Engine thiếu backgroundId cho {selected_connector}")
-    project_dir = Path(background_id).expanduser().resolve()
-    if not project_dir.is_dir():
-        raise ValueError(f"Project Wallpaper Engine không tồn tại: {project_dir}")
+    item_type, title, item_path, preview_path, external_id, library, plugin = row
+    library_root = Path(library).expanduser().resolve()
+    source_relative = preview_path or (item_path if item_type == "image" else None)
+    if not isinstance(source_relative, str) or not source_relative:
+        raise ValueError(f"Waywallen item {item_id} không có preview dùng được")
+    preview = (library_root / source_relative).resolve()
+    if not preview.is_relative_to(library_root) or not preview.is_file():
+        raise ValueError(f"Preview Waywallen không an toàn hoặc không tồn tại: {preview}")
 
-    project_file = project_dir / "project.json"
-    project = read_json_retry(project_file)
-    candidates: list[Path] = []
-    configured_preview = project.get("preview")
-    if isinstance(configured_preview, str) and configured_preview:
-        candidates.append((project_dir / configured_preview).resolve())
-    candidates.extend(project_dir / name for name in WALLPAPER_ENGINE_PREVIEWS)
-
-    preview = next(
-        (path for path in candidates if path.is_file() and path.is_relative_to(project_dir)),
-        None,
-    )
-    if preview is None:
-        raise ValueError(f"Không tìm thấy preview an toàn trong project {project_dir.name}")
-
+    project = (library_root / item_path).resolve()
+    if not project.is_relative_to(library_root):
+        raise ValueError(f"Project Waywallen nằm ngoài library: {project}")
     stat = preview.stat()
     metadata = {
-        "connector": selected_connector,
-        "project_id": project_dir.name,
-        "background_id": str(project_dir),
-        "title": project.get("title", project_dir.name),
+        "item_id": item_id,
+        "external_id": external_id,
+        "title": title,
+        "type": item_type,
+        "plugin": plugin,
+        "library": str(library_root),
+        "project": str(project),
         "preview": str(preview),
         "preview_mtime_ns": stat.st_mtime_ns,
         "preview_size": stat.st_size,
@@ -234,14 +248,14 @@ def resolve_wallpaper_engine(connector: str) -> tuple[Path, dict]:
     return preview, metadata
 
 
-def same_wallpaper_engine_source(metadata: dict) -> bool:
+def same_waywallen_source(metadata: dict) -> bool:
     try:
         palette = json.loads(PALETTE.read_text())
     except (OSError, json.JSONDecodeError):
         return False
     return (
         palette.get("generator_version") == GENERATOR_VERSION
-        and palette.get("wallpaper_engine") == metadata
+        and palette.get("waywallen") == metadata
     )
 
 
@@ -663,17 +677,13 @@ def parse_args() -> argparse.Namespace:
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--wallpaper", type=Path, help="Ảnh dùng để sinh M3 Tonal Spot")
     source.add_argument(
-        "--wallpaper-engine", action="store_true",
-        help="Lấy preview của project đang chạy trong Linux Wallpaper Engine",
-    )
-    parser.add_argument(
-        "--connector", default="eDP-1",
-        help="Connector Wallpaper Engine quyết định palette (mặc định: eDP-1)",
+        "--waywallen", action="store_true",
+        help="Lấy preview của wallpaper đang chạy trong Waywallen",
     )
     parser.add_argument("--check", action="store_true", help="Chỉ kiểm tra, không ghi file")
     args = parser.parse_args()
-    if args.check and not (args.wallpaper or args.wallpaper_engine):
-        parser.error("--check cần --wallpaper PATH hoặc --wallpaper-engine")
+    if args.check and not (args.wallpaper or args.waywallen):
+        parser.error("--check cần --wallpaper PATH hoặc --waywallen")
     return args
 
 
@@ -681,22 +691,22 @@ def main() -> int:
     args = parse_args()
     try:
         source_path = args.wallpaper
-        engine_metadata = None
-        if args.wallpaper_engine:
-            source_path, engine_metadata = resolve_wallpaper_engine(args.connector)
+        waywallen_metadata = None
+        if args.waywallen:
+            source_path, waywallen_metadata = resolve_waywallen()
             print(
-                f"Wallpaper Engine: {engine_metadata['project_id']} — "
-                f"{engine_metadata['title']} ({engine_metadata['connector']})"
+                f"Waywallen: item {waywallen_metadata['item_id']} — "
+                f"{waywallen_metadata['title']} ({waywallen_metadata['plugin']})"
             )
             print(f"  preview: {source_path}")
-            if not args.check and same_wallpaper_engine_source(engine_metadata):
-                print("  = Project và preview không đổi; bỏ qua cập nhật palette")
+            if not args.check and same_waywallen_source(waywallen_metadata):
+                print("  = Wallpaper và preview không đổi; bỏ qua cập nhật palette")
                 return 0
 
         if source_path:
             variants, kitty_mode, luma = noctalia_variants(source_path)
-            # Palette chia sẻ và mọi ứng dụng khác luôn dùng light. Chỉ Kitty
-            # chọn light/dark theo độ sáng trung bình của wallpaper.
+            # Palette chia sẻ cho GUI luôn dùng light. Toàn bộ TUI chọn
+            # light/dark theo độ sáng trung bình của wallpaper.
             p = build_palette(variants["light"], source_path, "light", luma)
             kitty_p = build_palette(
                 variants[kitty_mode], source_path, kitty_mode, luma,
@@ -708,8 +718,8 @@ def main() -> int:
                     if isinstance(value, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", value)
                 },
             }
-            if engine_metadata is not None:
-                p["wallpaper_engine"] = engine_metadata
+            if waywallen_metadata is not None:
+                p["waywallen"] = waywallen_metadata
             report(p)
             print(
                 f"  Terminal         {kitty_mode} "
