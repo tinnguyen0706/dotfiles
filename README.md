@@ -1,154 +1,174 @@
-# dotfiles
+# Dotfiles
 
-Cấu hình Linux Arch Linux + Zsh + Niri + Kitty + Neovim của tôi.
+Dotfiles cho Arch Linux với Zsh, Niri, Noctalia, Kitty, Neovim, Yazi và bộ
+profile pin/AC. Repo dùng mô hình bare Git repository: Git directory nằm ở
+`~/.dotfiles`, còn `$HOME` là work tree.
 
-## Thành phần
+## Thành phần chính
 
-| Công cụ | Vị trí |
-|---------|--------|
-| **Zsh** | `.zshrc`, `.zprofile` |
-| **Prompt** | `.config/starship.toml` |
-| **Terminal** | `.config/kitty/kitty.conf` |
-| **Compositor** | `.config/niri/config.kdl` |
-| **Trình soạn thảo** | `.config/nvim/` |
-| **File manager** | `.config/yazi/` |
-| **Resource monitor** | `.config/btop/` |
-| **System fetch** | `.config/fastfetch/config.jsonc` |
-| **Theme generator** | `.config/update-theme.py`, `.config/palette.json` |
-| **Wallpaper watcher** | `.config/systemd/user/waywallen-palette.*` |
-| **X resources** | `.Xresources` |
-| **VS Code flags** | `.config/code-flags.conf` |
-| **Spotify flags** | `.config/spotify-launcher.conf` |
+| Thành phần | Cấu hình |
+| --- | --- |
+| Zsh và Starship | `.zshrc`, `.zprofile`, `.config/starship.toml` |
+| Niri và Noctalia | `.config/niri/`, `.config/noctalia/` |
+| Kitty | `.config/kitty/kitty.conf` |
+| System profile | `.config/system-profile.py`, `.local/bin/sp` |
+| Waywallen | `.config/systemd/user/waywallen*.{service,path}` |
+| Neovim và Yazi | `.config/nvim/`, `.config/yazi/` |
+| Dynamic theme | `.config/update-theme.py`, `.config/palette.json` |
+| Package snapshot | `.config/dotfiles/packages/` |
+| Bootstrap | `.local/bin/bootstrap-dotfiles` |
 
-## Cài đặt (trên máy mới)
+Runtime files trong `~/.local/state` không được commit. Bootstrap dựng lại chúng
+từ template hoặc bằng lệnh `sp sync`.
+
+## Cài trên máy mới
+
+### 1. Checkout dotfiles
 
 ```bash
-sudo pacman -S git zsh kitty neovim yazi niri btop fastfetch starship python-pillow
-paru -S waywallen waywallen-display open-wallpaper-engine
+sudo pacman -S --needed git
 
 git clone --bare https://github.com/tinnguyen0706/dotfiles.git ~/.dotfiles
-alias config='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias config='git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME"'
 config checkout
-
-# Nếu báo conflict (file đã tồn tại):
-mv ~/.zshrc ~/.zshrc.bak
-config checkout
-
 config config status.showUntrackedFiles no
 ```
 
-## Sử dụng
+Nếu checkout báo file đã tồn tại, sao lưu đúng các file được báo rồi chạy lại.
+Ví dụ:
 
 ```bash
-config status        # xem thay đổi
-config add ~/.zshrc  # thêm file mới
-config commit -m "..." # commit
-config push          # push lên GitHub
-config pull          # pull từ GitHub (máy mới update)
+mkdir -p ~/.dotfiles-backup
+mv ~/.zshrc ~/.dotfiles-backup/
+config checkout
 ```
 
-## Phím tắt cơ bản
+Không xóa toàn bộ `$HOME` để xử lý conflict.
 
-**Niri:**
-- `Super` — launcher
-- `Super + Shift + Q` — đóng cửa sổ
-- `Super + [1-9]` — chuyển workspace
+### 2. Cài phần mềm và kích hoạt service
 
-**Kitty:**
-- `Ctrl + Shift + T` — tab mới
-- `Ctrl + Shift + Enter` — split ngang
-- `Ctrl + Shift + H` — đóng tab
-
-**Yazi:**
-- `Q` — quit
-- `~` — về home
-- `Y` — copy đường dẫn
-- Gõ tên — filter
-
-## Theming
-
-Màu được sinh từ wallpaper bằng Noctalia `m3-tonal-spot`. `palette.json` chứa hai lớp:
-
-- Palette root luôn là **light**, dành cho Noctalia, Vesktop và ứng dụng GUI.
-- `terminal` tự chọn **light/dark** theo độ sáng wallpaper, dùng chung cho Kitty,
-  Starship, Zsh, btop, Yazi, OpenCode và Neovim.
-
-Role chữ của light palette đạt tối thiểu `7:1`; dark terminal palette đạt tối thiểu
-`4.5:1`. Yazi, btop, OpenCode và Neovim kế thừa nền trong suốt của Kitty thay vì
-tự phủ nền chính.
+Chế độ portable phù hợp với máy Arch khác phần cứng:
 
 ```bash
-# Áp dụng lại palette.json hiện có
-~/.config/update-theme.py
-
-# Sinh palette từ wallpaper rồi cập nhật tất cả ứng dụng
-~/.config/update-theme.py --wallpaper /đường/dẫn/wallpaper.jpg
-
-# Sinh palette từ preview của wallpaper Waywallen đang chạy
-~/.config/update-theme.py --waywallen
-
-# Chỉ kiểm tra màu và tương phản, không ghi file
-~/.config/update-theme.py --check --wallpaper /đường/dẫn/wallpaper.jpg
+~/.local/bin/bootstrap-dotfiles
 ```
 
-### Hook đổi wallpaper của Noctalia
-
-Noctalia lưu cấu hình đang hoạt động tại `~/.local/state/noctalia/settings.toml`.
-Trên máy mới, thêm hook sau vào section `[hooks]`:
-
-```toml
-[hooks]
-wallpaper_changed = "~/.config/update-theme.py --wallpaper \"$NOCTALIA_WALLPAPER_PATH\""
-```
-
-Trong section `[theme]`, dùng cùng scheme với script:
-
-```toml
-[theme]
-mode = "light"
-source = "wallpaper"
-wallpaper_scheme = "m3-tonal-spot"
-```
-
-Chỉ dùng `wallpaper_changed`; không thêm đồng thời `colors_changed`, nếu không một lần
-đổi wallpaper có thể chạy cập nhật theme nhiều lần.
-
-Kiểm tra cấu hình và theo dõi hook:
+Xem trước các thao tác:
 
 ```bash
-noctalia config validate ~/.local/state/noctalia/settings.toml
-tail -f ~/.cache/noctalia/noctalia.log \
-  | rg --line-buffered 'wallpaper_changed|changing'
+~/.local/bin/bootstrap-dotfiles --dry-run
 ```
 
-Khi hoạt động đúng, log sẽ có `hook 'wallpaper_changed' running 1 command(s)` và
-trường `source` trong `~/.config/palette.json` sẽ trỏ tới wallpaper vừa chọn.
+Chỉ dùng chế độ sau cho laptop tương thích Ryzen 7 7435HS + RTX 4050 và hệ
+CachyOS hiện tại:
 
-### Waywallen + Open Wallpaper Engine
+```bash
+~/.local/bin/bootstrap-dotfiles --exact-machine
+```
 
-Open Wallpaper Engine cung cấp renderer scene/web dưới dạng plugin của Waywallen.
-Script lấy item đang hoạt động từ cấu hình và tra preview trong database:
+Bootstrap sẽ:
+
+- Cài package portable, AUR và Flatpak từ manifests.
+- Cài `paru` nếu máy chưa có.
+- Sao lưu Noctalia settings hiện hữu rồi cài template đã chuẩn hóa `$HOME`.
+- Bật `waywallen-palette.path` và đồng bộ profile hiện tại.
+- Với `--exact-machine`, cài driver/kernel tương ứng, bật `auto-cpufreq`, ép
+  governor `powersave` và đặt turbo thành `never`.
+
+Một số package phụ thuộc repository CachyOS/Chaotic đang được bật trên máy nguồn.
+Nếu package không tồn tại trên máy đích, `paru` sẽ báo lỗi để xử lý thay vì âm
+thầm bỏ qua.
+
+### 3. Đăng nhập lại
+
+Đặt Zsh làm shell nếu cần, sau đó đăng xuất/đăng nhập lại:
+
+```bash
+chsh -s /bin/zsh
+```
+
+Trong phiên Niri mới, kiểm tra:
+
+```bash
+sp status
+systemctl --user status waywallen-palette.path
+niri validate -c ~/.config/niri/config.kdl
+noctalia config validate
+```
+
+## System profile (`sp`)
 
 ```text
-~/.config/waywallen/config.toml
-~/.local/share/waywallen/waywallen-v2.db
+sp                         Hiển thị trạng thái
+sp power auto              Theo nguồn điện vật lý
+sp power battery           Ép profile tiết kiệm pin
+sp power ac                Ép profile AC
+sp power toggle            Chuyển giữa battery và AC
+sp glass on|off|toggle     Điều khiển blur/transparency khi dùng AC
+sp sync [battery|ac]       Đồng bộ từ hook Noctalia
+sp help                    Xem toàn bộ trợ giúp
 ```
 
-Niri tự chạy `waywallen --no-ui` để phục hồi wallpaper mà không mở cửa sổ quản lý.
-Hai user unit theo dõi config và sinh lại palette khi đổi wallpaper:
+Profile pin dùng 60 Hz, cửa sổ đục hoàn toàn, tắt blur/shadow/animation và dừng
+Waywallen. Profile AC dùng 144 Hz và bật lại Waywallen. Khi chuyển pin sang AC,
+glass được bật lại; sau đó vẫn có thể chạy `sp glass off` thủ công mà không tắt
+animation hoặc Waywallen.
+
+`auto-cpufreq` độc lập với `sp`. Trên máy nguồn nó luôn bị ép `powersave` và turbo
+`never`, kể cả khi cắm sạc.
+
+## Noctalia, Waywallen và theme
+
+Noctalia settings thật nằm tại `~/.local/state/noctalia/settings.toml`. Repo lưu
+snapshot tại `.config/noctalia/settings.template.toml`; bootstrap thay `@HOME@`,
+loại định danh input riêng của máy và cài snapshot này. File settings cũ được lưu
+thành `settings.toml.before-dotfiles`.
+
+Hook Noctalia đồng bộ pin/AC với `sp` và gọi `update-theme.py` khi wallpaper đổi.
+Waywallen chạy dưới user service do `sp` điều khiển; watcher palette được bật bằng:
 
 ```bash
 systemctl --user daemon-reload
 systemctl --user enable --now waywallen-palette.path
-systemctl --user status waywallen-palette.path
 ```
 
-Watcher dùng `preview_path` của item để lấy màu. Phiên Kitty đang mở được reload qua
-Unix socket; sau lần cài đầu tiên cần đóng toàn bộ Kitty và mở lại một lần để socket
-được tạo. Yazi, btop và OpenCode nhận theme mới ở lần mở kế tiếp.
+Các lệnh theme:
 
-## Transparency và blur
+```bash
+~/.config/update-theme.py
+~/.config/update-theme.py --wallpaper /path/to/wallpaper.jpg
+~/.config/update-theme.py --waywallen
+~/.config/update-theme.py --check --wallpaper /path/to/wallpaper.jpg
+```
 
-Niri dùng chung blur `passes 2`, `offset 2.0`, `noise 0.015` cho mọi cửa sổ. App GUI
-dùng opacity `0.82` cả khi focus và không focus. Kitty giữ opacity cửa sổ `1.0` để
-chữ luôn rõ, đồng thời dùng `background_opacity 0.70` để wallpaper hiện qua phần nền.
+Wallpaper và avatar không được lưu trong Git. Để giao diện giống hoàn toàn, chép
+riêng nội dung `~/Pictures/Wallpapers` và avatar, hoặc chọn lại chúng trong
+Noctalia. Template hiện tham chiếu output `eDP-1`; máy có tên output khác cần sửa
+`.config/niri/monitor.kdl` và Noctalia settings.
+
+## Thiết lập riêng của máy nguồn
+
+Máy nguồn dùng NVIDIA làm GPU hiển thị và boot với:
+
+```text
+pcie_aspm=off
+```
+
+Bootstrap cố ý không sửa `/etc/kernel/cmdline` hoặc sinh lại bootloader. Đây là
+tham số có thể giảm khả năng tiết kiệm điện và chỉ nên sao chép nếu phần cứng mới
+thực sự cần nó.
+
+## Quản lý repo
+
+Alias `config` hoạt động như Git nhưng dùng bare repository:
+
+```bash
+config status
+config add ~/.zshrc
+config commit -m "Update shell configuration"
+config push
+config pull
+```
+
+Cache, database, shell history, khóa SSH/GPG, token, browser profiles và dữ liệu
+ứng dụng không thuộc phạm vi dotfiles.

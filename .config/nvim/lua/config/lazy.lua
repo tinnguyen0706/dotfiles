@@ -1,0 +1,2 @@
+-- This file is intentionally left empty.
+-- LazyVim handles lazy.nvim setup in init.lua.

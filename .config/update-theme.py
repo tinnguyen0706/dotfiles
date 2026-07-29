@@ -26,10 +26,16 @@ MIN_TEXT_LIGHT = 7.0
 MIN_FOREGROUND = 7.0
 KITTY_OPACITY = 0.70
 HARMONIZE_AMOUNT = 0.15
-MODE_LUMA_THRESHOLD = 0.50
-GENERATOR_VERSION = 5
-WAYWALLEN_CONFIG = Path.home() / ".config/waywallen/config.toml"
-WAYWALLEN_DB = Path.home() / ".local/share/waywallen/waywallen-v2.db"
+MODE_LUMA_THRESHOLD = 0.60
+GENERATOR_VERSION = 7
+WAYWALLEN_CONFIG = (
+    Path.home()
+    / ".var/app/org.waywallen.waywallen/config/waywallen/config.toml"
+)
+WAYWALLEN_DB = (
+    Path.home()
+    / ".var/app/org.waywallen.waywallen/data/waywallen/waywallen-v2.db"
+)
 
 ANSI_ANCHORS = {
     "red": "#b80f2e", "green": "#2e801e", "yellow": "#c47a14",
@@ -704,15 +710,15 @@ def main() -> int:
                 return 0
 
         if source_path:
-            variants, kitty_mode, luma = noctalia_variants(source_path)
-            # Palette chia sẻ cho GUI luôn dùng light. Toàn bộ TUI chọn
+            variants, terminal_mode, luma = noctalia_variants(source_path)
+            # Palette root luôn sáng; Kitty và các ứng dụng terminal dùng
             # light/dark theo độ sáng trung bình của wallpaper.
             p = build_palette(variants["light"], source_path, "light", luma)
             kitty_p = build_palette(
-                variants[kitty_mode], source_path, kitty_mode, luma,
+                variants[terminal_mode], source_path, terminal_mode, luma,
             )
             p["terminal"] = {
-                "mode": kitty_mode,
+                "mode": terminal_mode,
                 "colors": {
                     key: value for key, value in kitty_p.items()
                     if isinstance(value, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", value)
@@ -722,7 +728,7 @@ def main() -> int:
                 p["waywallen"] = waywallen_metadata
             report(p)
             print(
-                f"  Terminal         {kitty_mode} "
+                f"  Terminal         {terminal_mode} "
                 f"(chọn theo wallpaper, ngưỡng {MODE_LUMA_THRESHOLD:.2f})"
             )
             if args.check:

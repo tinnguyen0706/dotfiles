@@ -2,7 +2,7 @@
 Description=Watch Waywallen for wallpaper changes
 
 [Path]
-PathChanged=%h/.config/waywallen/config.toml
+PathChanged=%h/.var/app/org.waywallen.waywallen/config/waywallen/config.toml
 Unit=waywallen-palette.service
 
 [Install]

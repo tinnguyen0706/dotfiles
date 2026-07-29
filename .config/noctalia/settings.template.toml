@@ -1,0 +1,442 @@
+config_version = 8
+
+[backdrop]
+enabled = true
+
+[bar]
+order = [ "default" ]
+
+    [bar.default]
+    background_opacity = 0.81999998167157173
+    border = "tertiary"
+    border_width = 1.0
+    center = [ "cat_3", "workspaces", "cat_2" ]
+    end = [ "privacy", "tray", "group:g1", "control-center", "clock", "notifications" ]
+    margin_edge = 0
+    margin_ends = 0
+    shadow = false
+    start = [ "launcher", "active_window", "media" ]
+    thickness = 25
+
+        [[bar.default.capsule_group]]
+        enabled = true
+        fill = "on_primary"
+        id = "g1"
+        members = [ "network", "bluetooth", "battery" ]
+        opacity = 1.0
+        padding = 6.0
+
+
+[calendar]
+enabled = true
+
+    [calendar.account.tinhiem]
+    type = "google"
+
+[control_center]
+hidden_tabs = [ "power" ]
+sidebar_section = "none"
+
+    [[control_center.shortcuts]]
+    type = "audio"
+
+    [[control_center.shortcuts]]
+    type = "caffeine"
+
+    [[control_center.shortcuts]]
+    type = "nightlight"
+
+    [[control_center.shortcuts]]
+    type = "notification"
+
+[desktop_widgets]
+enabled = false
+schema_version = 1
+widget_order = [
+    "desktop-widget-0000000000000001",
+    "desktop-widget-0000000000000002",
+    "desktop-widget-0000000000000003",
+    "desktop-widget-0000000000000004",
+    "desktop-widget-0000000000000005",
+    "desktop-widget-0000000000000006",
+    "desktop-widget-0000000000000007"
+]
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [desktop_widgets.widget.desktop-widget-0000000000000001]
+    box_height = 480.0
+    box_width = 928.0
+    cx = 1440.0
+    cy = 284.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "fancy_audio_visualizer"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000001.settings]
+        background = false
+        visualization_mode = "all"
+
+    [desktop_widgets.widget.desktop-widget-0000000000000002]
+    box_height = 480.0
+    box_width = 928.0
+    cx = 480.0
+    cy = 284.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "weather"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000002.settings]
+        background = false
+        forecast_days = 3
+        shadow = false
+        show_forecast = true
+
+    [desktop_widgets.widget.desktop-widget-0000000000000003]
+    box_height = 240.0
+    box_width = 448.0
+    cx = 240.0
+    cy = 676.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "sysmon"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000003.settings]
+        background = false
+        color = "primary"
+        display = "graph"
+        gauge_layout = "vertical"
+        shadow = false
+        stat = "cpu_usage"
+        stat2 = "cpu_temp"
+
+    [desktop_widgets.widget.desktop-widget-0000000000000004]
+    box_height = 240.0
+    box_width = 448.0
+    cx = 240.0
+    cy = 944.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "sysmon"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000004.settings]
+        background = false
+        shadow = false
+        stat = "gpu_usage"
+        stat2 = "gpu_temp"
+
+    [desktop_widgets.widget.desktop-widget-0000000000000005]
+    box_height = 240.0
+    box_width = 448.0
+    cx = 720.0
+    cy = 676.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "sysmon"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000005.settings]
+        background = false
+        shadow = false
+        stat = "gpu_vram"
+        stat2 = "ram_pct"
+
+    [desktop_widgets.widget.desktop-widget-0000000000000006]
+    box_height = 240.0
+    box_width = 432.0
+    cx = 712.0
+    cy = 944.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "sysmon"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000006.settings]
+        background = false
+        shadow = false
+        stat = "net_rx"
+        stat2 = "net_tx"
+
+    [desktop_widgets.widget.desktop-widget-0000000000000007]
+    box_height = 512.0
+    box_width = 928.0
+    cx = 1440.0
+    cy = 812.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "media_player"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000007.settings]
+        background = false
+        hide_when_no_media = true
+        layout = "vertical"
+        shadow = false
+
+[dock]
+auto_hide = true
+enabled = true
+launcher_position = "start"
+pinned = [ "firefox", "code", "zalo", "dev.vencord.Vesktop", "org.gnome.Nautilus" ]
+reserve_space = false
+show_dots = true
+
+[hooks]
+wallpaper_changed = "~/.config/update-theme.py --wallpaper \"$NOCTALIA_WALLPAPER_PATH\""
+started = "~/.config/system-profile.py sync"
+battery_charging = "~/.config/system-profile.py sync ac"
+battery_discharging = "~/.config/system-profile.py sync battery"
+battery_plugged = "~/.config/system-profile.py sync ac"
+
+[hot_corners.top_left]
+action = "window_switcher"
+
+[idle]
+behavior_order = [ "lock", "screen-off", "lock-and-suspend" ]
+
+    [idle.behavior.lock]
+    action = "lock"
+    enabled = true
+    timeout = 600
+
+    [idle.behavior.lock-and-suspend]
+    action = "lock_and_suspend"
+    enabled = true
+    timeout = 900
+
+    [idle.behavior.screen-off]
+    action = "screen_off"
+    enabled = true
+    timeout = 660
+
+[location]
+auto_locate = true
+
+[lockscreen]
+blurred_desktop = true
+fingerprint = false
+
+[lockscreen_widgets]
+enabled = true
+schema_version = 1
+widget_order = [
+    "lockscreen-login-box@eDP-1",
+    "lockscreen-widget-0000000000000001",
+    "lockscreen-widget-0000000000000002",
+    "lockscreen-widget-0000000000000003"
+]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 70.0
+    box_width = 400.0
+    cx = 960.0
+    cy = 943.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_opacity = 0.0
+        input_opacity = 0.0
+        show_login_button = false
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000001]
+    box_height = 112.0
+    box_width = 464.0
+    cx = 960.0
+    cy = 180.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "clock"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000001.settings]
+        background = false
+        center_text = true
+        clock_style = "digital"
+        shadow = false
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000002]
+    box_height = 64.0
+    box_width = 240.0
+    cx = 976.0
+    cy = 76.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "weather"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000002.settings]
+        background = false
+        shadow = false
+        show_forecast = false
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000003]
+    box_height = 272.0
+    box_width = 400.0
+    cx = 960.0
+    cy = 380.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "media_player"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000003.settings]
+        background = false
+        shadow = false
+
+[nightlight]
+enabled = true
+
+[osd.kinds]
+media = false
+
+[plugin_settings."noctalia/translator"]
+target_lang = "vi"
+
+[plugin_settings."radimous/prismlauncher-instances"]
+prism_path = "~/.local/share/ElyPrismLauncher"
+
+[plugins]
+enabled = [ "noctalia/translator", "radimous/prismlauncher-instances", "dotnetrob/cat", "noctalia/bongocat" ]
+
+[shell]
+avatar_path = "@HOME@/Pictures/Avata/avata.png"
+external_ip_enabled = true
+font_family = "Inter"
+panel_anchor_bar = "default"
+password_style = "random"
+polkit_agent = true
+screen_time_enabled = true
+telemetry_enabled = true
+
+    [shell.animation]
+    enabled = true
+
+    [shell.launcher]
+    app_grid = true
+    compact = true
+
+    [shell.panel]
+    clipboard_placement = "attached"
+    launcher_placement = "attached"
+    launcher_position = "bottom_center"
+    open_near_click_control_center = true
+    session_position = "top_right"
+    transparency_mode = "glass"
+
+    [[shell.session.actions]]
+    action = "lock"
+    enabled = true
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "logout"
+    enabled = true
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "lock_and_suspend"
+    enabled = true
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "reboot"
+    enabled = true
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "shutdown"
+    enabled = true
+    variant = "destructive"
+
+    [shell.shadow]
+    direction = "down_right"
+
+[system.monitor]
+gpu_poll_seconds = 5
+
+[theme]
+builtin = "Catppuccin"
+community_palette = "Tokyo Night Moon"
+custom_palette = "ADW"
+mode = "light"
+source = "wallpaper"
+wallpaper_scheme = "m3-tonal-spot"
+
+    [theme.templates]
+    builtin_ids = [ "gtk3", "gtk4", "niri", "qt" ]
+
+[wallpaper]
+directory = "@HOME@/Pictures/Wallpapers"
+enabled = false
+transition_on_startup = true
+
+    [wallpaper.automation]
+    enabled = true
+
+    [wallpaper.default]
+    path = "@HOME@/Pictures/Wallpapers/the-shorekeeper-1920x1080-25523.jpg"
+
+    [wallpaper.last]
+    path = "@HOME@/Pictures/Wallpapers/the-shorekeeper-1920x1080-25523.jpg"
+
+    [wallpaper.monitors.eDP-1]
+    path = "@HOME@/Pictures/Wallpapers/the-shorekeeper-1920x1080-25523.jpg"
+
+    [[wallpaper.favorite]]
+    path = "@HOME@/Pictures/Wallpapers/your-name-couple-1920x1080-25439.jpg"
+    theme_mode = "auto"
+
+[widget.battery]
+display_mode = "graphic"
+show_label = false
+
+[widget.bluetooth]
+show_label = true
+
+[widget.cat]
+type = "noctalia/bongocat:cat"
+
+[widget.cat_2]
+cat_size = 35
+type = "dotnetrob/cat:cat"
+
+[widget.cat_3]
+input_devices = []
+type = "noctalia/bongocat:cat"
+
+[widget.clock]
+format = "{:%a %d %b - %H:%M}"
+
+[widget.control-center]
+capsule_border = "tertiary"
+capsule_fill = "primary"
+capsule_foreground = "on_secondary"
+glyph = "adjustments"
+
+[widget.launcher]
+glyph = "navigation"
+
+[widget.media]
+hide_when_no_media = true
+title_scroll = "always"
+
+[widget.network]
+show_vpn_label = true
+
+[widget.notifications]
+hide_when_no_unread = true
+
+[widget.privacy]
+hide_inactive = true
+
+[widget.sysmon]
+anchor = true
+stat = "gpu_usage"
+
+[widget.tray]
+drawer = true
+pinned = [ "Fcitx" ]

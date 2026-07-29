@@ -1,0 +1,12 @@
+# Hardware/CachyOS packages for the current Ryzen 7 7435HS + RTX 4050 laptop.
+amd-ucode
+cachyos-keyring
+cachyos-mirrorlist
+cachyos-settings
+cachyos-v3-mirrorlist
+canon-lbp2900-capt
+libva-nvidia-driver
+linux-cachyos
+linux-cachyos-nvidia-open
+nvidia-utils
+opencl-nvidia

@@ -1,0 +1,5 @@
+[hooks]
+started = "~/.config/system-profile.py sync"
+battery_charging = "~/.config/system-profile.py sync ac"
+battery_discharging = "~/.config/system-profile.py sync battery"
+battery_plugged = "~/.config/system-profile.py sync ac"

@@ -4,4 +4,4 @@ export GLFW_IM_MODULE=ibus
 
 
 # Added by Antigravity CLI installer
-export PATH="/home/tinhiem/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
