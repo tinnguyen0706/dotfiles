@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+EXACT_MACHINE=false
+DRY_RUN=false
+CONFIG_ROOT="${XDG_CONFIG_HOME:-$HOME/.config}"
+MANIFEST_ROOT="$CONFIG_ROOT/dotfiles/packages"
+NOCTALIA_TEMPLATE="$CONFIG_ROOT/noctalia/settings.template.toml"
+NOCTALIA_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/noctalia/settings.toml"
+
+usage() {
+    cat <<'EOF'
+Usage: bootstrap-dotfiles [--exact-machine] [--dry-run]
+
+Install packages and activate the services required by these dotfiles.
+
+Options:
+  --exact-machine  Also install the CachyOS/NVIDIA packages and restore the
+                   auto-cpufreq overrides used on the source laptop.
+  --dry-run        Print mutating commands without running them.
+  -h, --help       Show this help page.
+EOF
+}
+
+for argument in "$@"; do
+    case "$argument" in
+        --exact-machine) EXACT_MACHINE=true ;;
+        --dry-run) DRY_RUN=true ;;
+        -h|--help) usage; exit 0 ;;
+        *) printf 'Unknown argument: %s\n' "$argument" >&2; usage >&2; exit 2 ;;
+    esac
+done
+
+run() {
+    printf ' +'
+    printf ' %q' "$@"
+    printf '\n'
+    if [[ $DRY_RUN == false ]]; then
+        "$@"
+    fi
+}
+
+read_manifest() {
+    local manifest=$1
+    [[ -f $manifest ]] || {
+        printf 'Missing manifest: %s\n' "$manifest" >&2
+        return 1
+    }
+    sed -e '/^[[:space:]]*#/d' -e '/^[[:space:]]*$/d' "$manifest"
+}
+
+install_paru() {
+    command -v paru >/dev/null && return
+    if pacman -Si paru >/dev/null 2>&1; then
+        run sudo pacman -S --needed paru
+        return
+    fi
+    if [[ $DRY_RUN == true ]]; then
+        printf ' + build and install paru from the AUR\n'
+        return
+    fi
+    local build_dir
+    build_dir=$(mktemp -d)
+    git clone https://aur.archlinux.org/paru.git "$build_dir/paru"
+    (
+        cd "$build_dir/paru"
+        makepkg -si --needed
+    )
+    rm -rf -- "$build_dir"
+}
+
+install_manifest() {
+    local manifest=$1
+    local -a packages
+    mapfile -t packages < <(read_manifest "$manifest")
+    ((${#packages[@]})) || return
+    run paru -S --needed "${packages[@]}"
+}
+
+install_flatpaks() {
+    local -a applications
+    mapfile -t applications < <(read_manifest "$MANIFEST_ROOT/flatpaks.txt")
+    ((${#applications[@]})) || return
+    if ! flatpak remote-list --columns=name 2>/dev/null | grep -Fxq flathub; then
+        run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    fi
+    run flatpak install --or-update --noninteractive flathub "${applications[@]}"
+}
+
+install_noctalia_template() {
+    [[ -f $NOCTALIA_TEMPLATE ]] || {
+        printf 'Missing Noctalia template: %s\n' "$NOCTALIA_TEMPLATE" >&2
+        return 1
+    }
+    if [[ $DRY_RUN == true ]]; then
+        printf ' + install %s as %s (with @HOME@ expanded)\n' \
+            "$NOCTALIA_TEMPLATE" "$NOCTALIA_STATE"
+        return
+    fi
+    mkdir -p "${NOCTALIA_STATE%/*}"
+    if [[ -f $NOCTALIA_STATE ]]; then
+        cp -a "$NOCTALIA_STATE" "$NOCTALIA_STATE.before-dotfiles"
+        printf 'Backed up Noctalia settings to %s\n' "$NOCTALIA_STATE.before-dotfiles"
+    fi
+    local rendered
+    rendered=$(mktemp)
+    sed "s|@HOME@|$HOME|g" "$NOCTALIA_TEMPLATE" > "$rendered"
+    install -m 0644 "$rendered" "$NOCTALIA_STATE"
+    rm -f -- "$rendered"
+}
+
+activate_services() {
+    run systemctl --user daemon-reload
+    run systemctl --user enable --now waywallen-palette.path
+    if [[ $EXACT_MACHINE == true ]]; then
+        run sudo systemctl enable --now auto-cpufreq.service
+        run sudo auto-cpufreq --force powersave
+        run sudo auto-cpufreq --turbo never
+    fi
+}
+
+printf 'Installing portable dotfiles dependencies...\n'
+run sudo pacman -S --needed base-devel git
+install_paru
+install_manifest "$MANIFEST_ROOT/portable.txt"
+install_manifest "$MANIFEST_ROOT/aur.txt"
+install_flatpaks
+
+if [[ $EXACT_MACHINE == true ]]; then
+    printf 'Installing source-laptop hardware packages...\n'
+    install_manifest "$MANIFEST_ROOT/exact-machine.txt"
+fi
+
+install_noctalia_template
+activate_services
+
+if command -v sp >/dev/null; then
+    if [[ $DRY_RUN == true ]]; then
+        printf ' + sp sync\n'
+    elif ! sp sync; then
+        printf 'Warning: sp sync failed; run it again inside the Niri session.\n' >&2
+    fi
+fi
+
+if [[ $EXACT_MACHINE == true ]]; then
+    cat <<'EOF'
+
+Exact-machine note:
+  The source laptop also boots with pcie_aspm=off. The bootstrap intentionally
+  does not edit /etc/kernel/cmdline or regenerate the boot loader. See README.md
+  before copying that hardware-specific option.
+EOF
+fi
+
+printf '\nBootstrap complete. Log out and back in before validating the desktop.\n'

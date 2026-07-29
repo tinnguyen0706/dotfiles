@@ -1,116 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu>
-<!-- Note: for localization support of menu items "client-menu" has to be removed here -->
-<menu id="client-menu">
-  <item label="Minimize">
-    <action name="Iconify" />
-  </item>
-  <item label="Maximize">
-    <action name="ToggleMaximize" />
-  </item>
-  <item label="Fullscreen">
-    <action name="ToggleFullscreen" />
-  </item>
-  <item label="Roll Up/Down">
-    <action name="ToggleShade" />
-  </item>
-  <item label="Decorations">
-    <action name="ToggleDecorations" />
-  </item>
-  <item label="Always on Top">
-    <action name="ToggleAlwaysOnTop" />
-  </item>
-  <!--
-    Any menu with the id "workspaces" will be hidden
-    if there is only a single workspace available.
-  -->
-  <menu id="client-send-to-menu" />
-  <!--
-    openbox default workspace selector
-    to use replace above workspace menu with the example below
-    the label is required, but you can change the text.
+  <menu id="client-menu">
+    <item label="Minimize">
+      <action name="Iconify" />
+    </item>
+    <item label="Maximize">
+      <action name="ToggleMaximize" />
+    </item>
+    <item label="Fullscreen">
+      <action name="ToggleFullscreen" />
+    </item>
+    <item label="Roll Up/Down">
+      <action name="ToggleShade" />
+    </item>
+    <item label="Decorations">
+      <action name="ToggleDecorations" />
+    </item>
+    <item label="Always on Top">
+      <action name="ToggleAlwaysOnTop" />
+    </item>
+    <item label="Close">
+      <action name="Close" />
+    </item>
+  </menu>
 
-    <menu id="client-send-to-menu" label="Send to..." />
-  -->
-  <item label="Close">
-    <action name="Close" />
-  </item>
-</menu>
-
-<menu id="root-menu">
-  <!-- Make client-list-combined-menu a submenu of root-menu
-       You must supply a label or it will not appear in root-menu -->
-  <!--
-  <menu id="client-list-combined-menu" label="Running..." />
-  -->
-  <item label="Terminal (kitty)">
-    <action name="Execute">
-      <command>kitty</command>
-    </action>
-  </item>
-  <item label="File Manager (yazi)">
-    <action name="Execute">
-      <command>kitty -e yazi</command>
-    </action>
-  </item>
-  <item label="File Manager (nautilus)">
-    <action name="Execute">
-      <command>nautilus</command>
-    </action>
-  </item>
-  <separator />
-  <item label="Browser (firefox)">
-    <action name="Execute">
-      <command>firefox</command>
-    </action>
-  </item>
-<item label="Launcher (noctalia)">
-    <action name="Execute">
-      <command>noctalia msg panel-toggle launcher</command>
-    </action>
-  </item>
-  <item label="Control Center (noctalia)">
-    <action name="Execute">
-      <command>noctalia msg panel-toggle control-center</command>
-    </action>
-  </item>
-  <item label="Clipboard (noctalia)">
-    <action name="Execute">
-      <command>noctalia msg panel-toggle clipboard</command>
-    </action>
-  </item>
-  <separator />
-  <item label="System Monitor (btop)">
-    <action name="Execute">
-      <command>kitty -e btop</command>
-    </action>
-  </item>
-  <separator />
-  <item label="Display Settings">
-    <action name="Execute">
-      <command>nwg-displays</command>
-    </action>
-  </item>
-  <item label="Reconfigure">
-    <action name="Reconfigure" />
-  </item>
-  <item label="Exit">
-    <action name="Exit" />
-  </item>
-</menu>
-
-<menu id="some-custom-menu">
-  <!--
-    Creates menu title.
-    To create an empty header with no text,
-    set label=" ", not label=""
-  -->
-  <separator label="custom menu" />
-  <item label="Reconfigure">
-    <action name="Reconfigure" />
-  </item>
-  <item label="Exit">
-    <action name="Exit" />
-  </item>
-</menu>
-
+  <menu id="root-menu">
+    <item label="Terminal">
+      <action name="Execute" command="kitty" />
+    </item>
+    <item label="Yazi">
+      <action name="Execute" command="kitty -e yazi" />
+    </item>
+    <item label="Files">
+      <action name="Execute" command="nautilus" />
+    </item>
+    <separator />
+    <item label="Firefox">
+      <action name="Execute" command="firefox" />
+    </item>
+    <item label="Launcher">
+      <action name="Execute" command="noctalia msg panel-toggle launcher" />
+    </item>
+    <item label="Control Center">
+      <action name="Execute" command="noctalia msg panel-toggle control-center" />
+    </item>
+    <item label="Clipboard">
+      <action name="Execute" command="noctalia msg panel-toggle clipboard" />
+    </item>
+    <separator />
+    <item label="Btop">
+      <action name="Execute" command="kitty -e btop" />
+    </item>
+    <item label="Display Settings">
+      <action name="Execute" command="nwg-displays" />
+    </item>
+    <separator />
+    <item label="Reconfigure">
+      <action name="Reconfigure" />
+    </item>
+    <item label="Exit">
+      <action name="Exit" />
+    </item>
+  </menu>
 </openbox_menu>

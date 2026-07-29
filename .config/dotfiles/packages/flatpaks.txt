@@ -1,0 +1,6 @@
+# Flatpak application IDs installed on the current system.
+cn.wps.wps_365
+com.github.tchx84.Flatseal
+com.usebottles.bottles
+dev.vencord.Vesktop
+org.waywallen.waywallen

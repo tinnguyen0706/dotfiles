@@ -1,0 +1,10 @@
+[Unit]
+Description=Generate the shared palette from Waywallen
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/update-theme.py --waywallen
+
+[Install]
+WantedBy=default.target

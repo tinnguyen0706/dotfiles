@@ -1,0 +1,9 @@
+# Foreign/AUR packages explicitly installed on the current system.
+ab-download-manager-bin
+dwproton-bin
+elyprismlauncher-bin
+fcitx5-lotus-bin
+nirimod-git
+tex-fmt-bin
+waywallen-display
+zalo-for-linux-bin

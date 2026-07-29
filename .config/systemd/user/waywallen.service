@@ -1,0 +1,16 @@
+[Unit]
+Description=Waywallen daemon and Niri layer-shell display
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.config/niri/start-waywallen.sh
+ExecStartPost=%h/.config/niri/register-waywallen-tray.sh
+ExecStop=-/usr/bin/flatpak kill org.waywallen.waywallen
+KillMode=control-group
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target
