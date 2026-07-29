@@ -150,6 +150,7 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // Startup
 // -----------------------------------------------------------------------------
 spawn-at-startup "noctalia"
+spawn-at-startup "kdeconnect-indicator"
 spawn-sh-at-startup "sleep 3 && exec ABDownloadManager --background"
 spawn-sh-at-startup "sleep 3 && exec zalo"
 spawn-sh-at-startup "sleep 3 && exec flatpak run dev.vencord.Vesktop --no-sandbox --enable-speech-dispatcher --ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --start-minimized"

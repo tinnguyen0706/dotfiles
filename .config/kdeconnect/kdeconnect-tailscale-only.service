@@ -1,0 +1,14 @@
+[Unit]
+Description=Restrict KDE Connect to the Tailscale interface
+After=tailscaled.service
+Wants=tailscaled.service
+
+[Service]
+Type=oneshot
+ExecStartPre=-/usr/bin/nft delete table inet kdeconnect_tailscale_only
+ExecStart=/usr/bin/nft -f /home/tinhiem/.config/kdeconnect/kdeconnect-tailscale-only.nft
+ExecStop=-/usr/bin/nft delete table inet kdeconnect_tailscale_only
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

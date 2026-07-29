@@ -1,0 +1,6 @@
+[Unit]
+Description=Refresh KDE Connect custom Tailscale devices
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/kdeconnect-cli --refresh

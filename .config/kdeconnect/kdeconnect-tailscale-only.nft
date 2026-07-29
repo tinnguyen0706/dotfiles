@@ -1,0 +1,13 @@
+table inet kdeconnect_tailscale_only {
+    chain input {
+        type filter hook input priority -50; policy accept;
+
+        iifname != "tailscale0" meta l4proto { tcp, udp } th dport 1714-1764 drop comment "Keep KDE Connect on Tailscale"
+    }
+
+    chain output {
+        type filter hook output priority -50; policy accept;
+
+        oifname != "tailscale0" meta l4proto { tcp, udp } th dport 1714-1764 drop comment "Keep KDE Connect on Tailscale"
+    }
+}

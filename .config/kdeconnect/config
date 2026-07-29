@@ -1,0 +1,4 @@
+[General]
+customDevices=100.100.135.20
+keyAlgorithm=EC
+name=archlinux
